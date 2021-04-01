@@ -1,9 +1,10 @@
+import 'package:flutter_app_tenis/preferences/userPreferences.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class AuthBloc {
-  String _tokenString = "";
-
+  String _tokenString;
+  final prefs = new UserPreferences();
   final PublishSubject _isSessionValid =
       PublishSubject<bool>(); //streamController
   Observable<bool> get isSessionValid => _isSessionValid.stream; //strean
@@ -13,8 +14,7 @@ class AuthBloc {
   }
 
   void restoreSession() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _tokenString = prefs.get("token");
+    _tokenString = await prefs.token;
     if (_tokenString != null && _tokenString.length > 0) {
       _isSessionValid.sink.add(true);
     } else {
@@ -22,16 +22,17 @@ class AuthBloc {
     }
   }
 
-  void openSession(String token) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("token", token);
+  void openSession(Map resp) {
+    String token = resp["tokenReturn"];
+    String user = json.encode(resp["user"]).toString();
+    prefs.token = token;
+    prefs.user = user;
     _tokenString = token;
     _isSessionValid.sink.add(true);
   }
 
   void closeSession() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove("token");
+    prefs.logout();
     _isSessionValid.sink.add(false);
   }
 }

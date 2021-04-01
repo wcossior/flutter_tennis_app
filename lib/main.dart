@@ -3,8 +3,16 @@ import 'package:flutter_app_tenis/blocs/auth_bloc.dart';
 import 'package:flutter_app_tenis/pages/home_page.dart';
 import 'package:flutter_app_tenis/pages/login_page.dart';
 import 'package:flutter_app_tenis/pages/signup_page.dart';
+import 'package:flutter_app_tenis/preferences/userPreferences.dart';
+import 'package:flutter_app_tenis/styles/theme.dart';
+import 'package:flutter/services.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  final prefs = new UserPreferences();
+  await prefs.initPrefs();
   runApp(MyApp());
 }
 
@@ -22,9 +30,7 @@ class MyApp extends StatelessWidget {
         "login": (BuildContext context) => LoginPage(),
         "signup": (BuildContext context) => SignUpPage(),
       },
-      theme: ThemeData(
-        primaryColor: Color.fromRGBO(174, 185, 127, 1.0),
-      ),
+      theme: CustomTheme.primaryTheme,
     );
   }
 

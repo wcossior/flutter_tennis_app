@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/pages/login_page.dart';
-import 'package:flutter_app_tenis/styles/styles.dart';
+import 'package:flutter_app_tenis/styles/backgrounds.dart';
+import 'package:flutter_app_tenis/styles/colors.dart';
+import 'package:flutter_app_tenis/styles/size_config.dart';
+import 'package:flutter_app_tenis/styles/svgIcons.dart';
+import 'package:flutter_app_tenis/widgets/customRaisedButton.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key}) : super(key: key);
@@ -12,13 +16,34 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: AppColors.blue),
+        iconTheme: IconThemeData(color: ColorsApp.blue),
+        backgroundColor: Colors.transparent,
         elevation: 0.0,
-        backgroundColor: AppColors.white,
       ),
-      body: _drawFormLogin(),
+      extendBodyBehindAppBar: true,
+      extendBody: true,
+      body: Stack(
+        children: [
+          _drawBackground(),
+          _drawFormLogin(),
+        ],
+      ),
+      bottomNavigationBar: _drawButttonIhaveAccount(),
+    );
+  }
+
+  Widget _drawBackground() {
+    return Container(
+      color: ColorsApp.blackOp25,
+      height: double.infinity,
+      child: Opacity(
+        opacity: 0.4,
+        child: BackgroundsApp.back2,
+      ),
     );
   }
 
@@ -27,55 +52,69 @@ class _SignUpPageState extends State<SignUpPage> {
 
     return SingleChildScrollView(
       child: Container(
-        width: size.width * 0.85,
-        margin: EdgeInsets.only(left: size.width * 0.075),
+        margin: EdgeInsets.only(
+          top: SizeConfig.screenHeight * 0.05,
+          left: SizeConfig.screenWidth * 0.075,
+          right: SizeConfig.screenWidth * 0.075,
+        ),
         child: Column(
           children: [
             SafeArea(
               child: Container(
-                height: size.height * 0.10,
+                height: SizeConfig.screenHeight * 0.02,
               ),
             ),
-            _drawTitleLogin(),
-            Column(
-              children: <Widget>[
-                _drawFieldNombre(),
-                _drawFieldCi(),
-                _drawFieldEmail(),
-                _drawFieldPassword(),
-                _drawButtonNewAccount(),
-              ],
-            ),
-            _drawButttonIhaveAccount(),
-            SizedBox(height: size.height * 0.1),
+            _drawTitleNewAccount(),
+            SizedBox(height: 25.0),
+            _drawFieldNombre(),
+            SizedBox(height: 25.0),
+            _drawFieldCi(),
+            SizedBox(height: 25.0),
+            _drawFieldEmail(),
+            SizedBox(height: 25.0),
+            _drawFieldPassword(),
+            SizedBox(height: 45.0),
+            _drawButtonNewAccount(),
+            SizedBox(height: size.height * 0.05),
           ],
         ),
       ),
     );
   }
 
-  Widget _drawTitleLogin() {
+  Widget _drawTitleNewAccount() {
     return Container(
-      margin: EdgeInsets.only(bottom: 30.0),
+      alignment: Alignment.center,
       child: Text(
-        "Nueva Cuenta",
-        style: AppText.blackBoldMonserrat_24,
+        "Nueva cuenta",
+        style: TextStyle(
+          color: ColorsApp.white,
+          fontSize: getProportionateScreenWidth(SizeFonts.sizeTitle2),
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
 
   Widget _drawButttonIhaveAccount() {
     return Container(
-      alignment: Alignment.centerLeft,
+      margin: EdgeInsets.only(
+        left: SizeConfig.screenWidth * 0.075,
+        right: SizeConfig.screenWidth * 0.075,
+      ),
       child: TextButton(
         style: ButtonStyle(
           overlayColor: MaterialStateProperty.all<Color>(
-            AppColors.blackOp35,
+            ColorsApp.blackOp35,
           ),
         ),
         child: Text(
           'Ya tengo una cuenta',
-          style: AppText.blueSemiBoldOpenSans_16,
+          style: TextStyle(
+            color: ColorsApp.blue,
+            fontSize: getProportionateScreenWidth(SizeFonts.sizeText2),
+            fontWeight: FontWeight.w600,
+          ),
         ),
         onPressed: () {
           return Navigator.of(context)
@@ -87,17 +126,23 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _drawFieldEmail() {
     return Container(
-      margin: EdgeInsets.only(bottom: 15.0),
       child: TextField(
-        style: AppText.blackNormalOpenSans_16,
+        style: TextStyle(color: ColorsApp.white, fontWeight: FontWeight.w600),
         keyboardType: TextInputType.emailAddress,
+        // onChanged: bloc.changeEmail,
         decoration: InputDecoration(
-          enabledBorder: AppTextFields.border,
-          focusedBorder: AppTextFields.border,
-          icon: Icon(Icons.mail_outline, color: AppColors.blackOp100),
-          labelStyle: AppText.blackNormalOpenSans_16,
-          errorStyle: AppText.redNormalOpenSans_12,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          suffixIcon: Icon(Icons.mail_outline, color: ColorsApp.white),
+          labelStyle: TextStyle(
+            color: ColorsApp.white,
+          ),
+          hintStyle: TextStyle(
+            color: ColorsApp.white,
+          ),
           labelText: 'Correo electrónico',
+          errorStyle: TextStyle(fontWeight: FontWeight.w600),
+          hintText: 'Ingresa tu correo electrónico',
+          // errorText: snapshot.error,
         ),
       ),
     );
@@ -105,17 +150,23 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _drawFieldCi() {
     return Container(
-      margin: EdgeInsets.only(bottom: 15.0),
       child: TextField(
-        style: AppText.blackNormalOpenSans_16,
-        keyboardType: TextInputType.number,
+        style: TextStyle(color: ColorsApp.white, fontWeight: FontWeight.w600),
+        keyboardType: TextInputType.emailAddress,
+        // onChanged: bloc.changeEmail,
         decoration: InputDecoration(
-          enabledBorder: AppTextFields.border,
-          focusedBorder: AppTextFields.border,
-          icon: Icon(Icons.person_pin, color: AppColors.blackOp100),
-          labelStyle: AppText.blackNormalOpenSans_16,
-          errorStyle: AppText.redNormalOpenSans_12,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          suffixIcon: Icon(Icons.person_pin, color: ColorsApp.white),
+          labelStyle: TextStyle(
+            color: ColorsApp.white,
+          ),
+          hintStyle: TextStyle(
+            color: ColorsApp.white,
+          ),
           labelText: 'Ci',
+          errorStyle: TextStyle(fontWeight: FontWeight.w600),
+          hintText: 'Ingresa el numero de tu ci',
+          // errorText: snapshot.error,
         ),
       ),
     );
@@ -123,17 +174,23 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _drawFieldNombre() {
     return Container(
-      margin: EdgeInsets.only(bottom: 15.0),
       child: TextField(
-        style: AppText.blackNormalOpenSans_16,
-        keyboardType: TextInputType.name,
+        style: TextStyle(color: ColorsApp.white, fontWeight: FontWeight.w600),
+        keyboardType: TextInputType.emailAddress,
+        // onChanged: bloc.changeEmail,
         decoration: InputDecoration(
-          enabledBorder: AppTextFields.border,
-          focusedBorder: AppTextFields.border,
-          icon: Icon(Icons.person_outline, color: AppColors.blackOp100),
-          labelStyle: AppText.blackNormalOpenSans_16,
-          errorStyle: AppText.redNormalOpenSans_12,
-          labelText: 'Nombre Completo',
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          suffixIcon: Icon(Icons.person_outline, color: ColorsApp.white),
+          labelStyle: TextStyle(
+            color: ColorsApp.white,
+          ),
+          hintStyle: TextStyle(
+            color: ColorsApp.white,
+          ),
+          labelText: 'Nombre',
+          errorStyle: TextStyle(fontWeight: FontWeight.w600),
+          hintText: 'Ingresa tu nombre',
+          // errorText: snapshot.error,
         ),
       ),
     );
@@ -141,36 +198,50 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _drawFieldPassword() {
     return Container(
-      margin: EdgeInsets.only(bottom: 15.0),
       child: TextField(
+        style: TextStyle(color: ColorsApp.white, fontWeight: FontWeight.w600),
         obscureText: true,
+        // onChanged: bloc.changePassword,
         decoration: InputDecoration(
-          enabledBorder: AppTextFields.border,
-          focusedBorder: AppTextFields.border,
-          icon: Icon(Icons.lock_outline, color: AppColors.blackOp100),
+          labelStyle: TextStyle(
+            color: ColorsApp.white,
+          ),
+          hintStyle: TextStyle(
+            color: ColorsApp.white,
+          ),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          suffixIcon: Icon(Icons.lock_outline, color: ColorsApp.white),
           labelText: 'Contraseña',
-          labelStyle: AppText.blackNormalOpenSans_16,
-          errorStyle: AppText.redNormalOpenSans_12,
+          hintText: 'Ingresa tu contraseña',
+          errorStyle: TextStyle(fontWeight: FontWeight.w600),
+          // errorText: snapshot.error,
         ),
       ),
     );
   }
 
   Widget _drawButtonNewAccount() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 15.0),
-      child: FlatButton(
-        child: Text(
-          'Registrarse',
-          style: AppText.whiteSemiBoldOpenSans_16,
+    return CustomRaisedButton(
+      child: Text(
+        'Iniciar sesión',
+        style: TextStyle(
+          color: ColorsApp.white,
+          fontWeight: FontWeight.w600,
+          fontSize: getProportionateScreenWidth(SizeFonts.sizeText2),
         ),
-        color: AppColors.blue,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
-        textColor: Colors.white,
-        padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
-        onPressed: () {},
       ),
+      color: ColorsApp.blue,
+      disabledColor: ColorsApp.blackOp50,
+      icon: SvgIconsApp.arrowRight,
+      // onPressed: !snapshot.hasData
+      //     ? null
+      //     : !firstClick
+      //         ? () {
+      //             setState(() => firstClick = true);
+      //             bloc.submit();
+      //           }
+      //         : null,
+      onPressed: () {},
     );
   }
 }

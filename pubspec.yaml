@@ -13,6 +13,8 @@ dependencies:
   rxdart: ^0.22.0
   shared_preferences: 
   flutter_svg: ^0.19.1
+  http: ^0.12.2
+  awesome_dialog: ^1.3.2
 
 dev_dependencies:
   flutter_test:
@@ -21,8 +23,10 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/back1.jpg
+    - assets/logo.png
   fonts:
-    - family: Monserrat
+    - family: Montserrat
       fonts:
         - asset: fonts/Montserrat-SemiBold.ttf
         - asset: fonts/Montserrat-Bold.ttf
@@ -32,4 +36,10 @@ flutter:
         - asset: fonts/OpenSans-Light.ttf
         - asset: fonts/OpenSans-Regular.ttf
         - asset: fonts/OpenSans-SemiBold.ttf
+    - family: Mulish
+      fonts:
+        - asset: fonts/Mulish-Light.ttf
+        - asset: fonts/Mulish-Regular.ttf
+        - asset: fonts/Mulish-SemiBold.ttf
+        - asset: fonts/Mulish-Bold.ttf
 

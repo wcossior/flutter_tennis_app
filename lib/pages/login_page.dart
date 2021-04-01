@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/login_bloc.dart';
 import 'package:flutter_app_tenis/pages/signup_page.dart';
-import 'package:flutter_app_tenis/styles/styles.dart';
+import 'package:flutter_app_tenis/styles/backgrounds.dart';
+import 'package:flutter_app_tenis/styles/colors.dart';
+import 'package:flutter_app_tenis/styles/size_config.dart';
+import 'package:flutter_app_tenis/styles/svgIcons.dart';
+import 'package:flutter_app_tenis/widgets/CustomRaisedButton.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -12,28 +17,48 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   LoginBloc loginBloc = LoginBloc();
+  bool firstClick = false;
+  String message = "";
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    SizeConfig().init(context);
 
     return Scaffold(
+      extendBody: true,
       body: Stack(
         children: [
-          // _drawBackground(size),
-          _drawContent(context),
-          // _loadingIndicator(loginBloc),
+          _drawBackground(),
+          _drawContent(),
+          _loadingIndicator(loginBloc),
         ],
       ),
-      bottomNavigationBar: _drawOptionCreateAccount(size),
+      bottomNavigationBar: _drawOptionCreateAccount(),
     );
   }
 
-  Widget _drawOptionCreateAccount(Size size) {
+  void _showMessageAlert(String message) {
+    String isValidData = "Inicio de sesión exitoso";
+    if (message != isValidData) {
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.WARNING,
+        animType: AnimType.SCALE,
+        title: message,
+        desc: "",
+        autoHide: Duration(seconds: 3),
+      )..show();
+      setState(() {
+        firstClick = false;
+      });
+    }
+  }
+
+  Widget _drawOptionCreateAccount() {
     return Container(
       margin: EdgeInsets.only(
-        left: size.width * 0.075,
-        right: size.width * 0.075,
+        left: SizeConfig.screenWidth * 0.075,
+        right: SizeConfig.screenWidth * 0.075,
       ),
       child: Row(
         children: [
@@ -44,46 +69,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _drawContent(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    return SingleChildScrollView(
-      child: Container(
-        margin: EdgeInsets.only(
-          top: size.height * 0.1,
-          left: size.width * 0.075,
-          right: size.width * 0.075,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SafeArea(
-              child: Container(
-                height: size.height * 0.02,
-              ),
-            ),
-            _drawTextWelcome(),
-            SizedBox(height: 5.0),
-            _drawDoYouHaveAaccount(),
-            SizedBox(height: 30.0),
-            _drawTitleLogin(),
-            _drawFieldEmail(loginBloc),
-            _drawFieldPassword(loginBloc),
-            _drawButtonLogin(loginBloc),
-            SizedBox(height: size.height * 0.12),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _drawTitleLogin() {
-    return Container(
-      alignment: Alignment.center,
-      margin: EdgeInsets.only(bottom: 30.0),
-      child: Text(
-        "Inicia Sesión",
-        style: AppText.blackBoldMonserrat_24,
+  Text _drawDontYouHaveAnyAccountYet() {
+    return Text(
+      'No tienes cuenta?',
+      style: TextStyle(
+        color: ColorsApp.white,
+        fontSize: getProportionateScreenWidth(SizeFonts.sizeText2),
+        fontWeight: FontWeight.w300,
       ),
     );
   }
@@ -92,12 +84,16 @@ class _LoginPageState extends State<LoginPage> {
     return TextButton(
       style: ButtonStyle(
         overlayColor: MaterialStateProperty.all<Color>(
-          AppColors.blackOp35,
+          ColorsApp.blackOp35,
         ),
       ),
       child: Text(
         'Crear una cuenta',
-        style: AppText.blueSemiBoldOpenSans_16,
+        style: TextStyle(
+          color: ColorsApp.blue,
+          fontSize: getProportionateScreenWidth(SizeFonts.sizeText2),
+          fontWeight: FontWeight.w600,
+        ),
       ),
       onPressed: () {
         return Navigator.of(context)
@@ -106,24 +102,37 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Text _drawDontYouHaveAnyAccountYet() {
-    return Text(
-      'No tienes cuenta?',
-      style: AppText.blackLightOpenSans_16,
-    );
-  }
-
-  Text _drawDoYouHaveAaccount() {
-    return Text(
-      'Tienes una cuenta?',
-      style: AppText.blackLightOpenSans_16,
-    );
-  }
-
-  Text _drawTextWelcome() {
-    return Text(
-      'Bienvenido!',
-      style: AppText.blackBoldMonserrat_35,
+  Widget _drawContent() {
+    return SingleChildScrollView(
+      child: Container(
+        margin: EdgeInsets.only(
+          top: SizeConfig.screenHeight * 0.1,
+          left: SizeConfig.screenWidth * 0.075,
+          right: SizeConfig.screenWidth * 0.075,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SafeArea(
+              child: Container(
+                height: SizeConfig.screenHeight * 0.02,
+              ),
+            ),
+            _drawTextWelcome(),
+            SizedBox(height: 5.0),
+            _drawDoYouHaveAaccount(),
+            SizedBox(height: 45.0),
+            _drawTitleLogin(),
+            SizedBox(height: 25.0),
+            _drawFieldEmail(loginBloc),
+            SizedBox(height: 25.0),
+            _drawFieldPassword(loginBloc),
+            SizedBox(height: 45.0),
+            _drawButtonLogin(loginBloc),
+            SizedBox(height: SizeConfig.screenHeight * 0.12),
+          ],
+        ),
+      ),
     );
   }
 
@@ -133,11 +142,48 @@ class _LoginPageState extends State<LoginPage> {
       builder: (context, snap) {
         return Container(
           child: Center(
-            child:
-                (snap.hasData && snap.data) ? CircularProgressIndicator() : null,
+            child: (snap.hasData && snap.data)
+                ? CircularProgressIndicator()
+                : null,
           ),
         );
       },
+    );
+  }
+
+  Text _drawTextWelcome() {
+    return Text(
+      'Bienvenido!',
+      style: TextStyle(
+        color: ColorsApp.white,
+        fontSize: getProportionateScreenWidth(SizeFonts.sizeTitle1),
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
+  Text _drawDoYouHaveAaccount() {
+    return Text(
+      'Tienes una cuenta?',
+      style: TextStyle(
+        color: ColorsApp.white,
+        fontSize: getProportionateScreenWidth(SizeFonts.sizeText2),
+        fontWeight: FontWeight.w300,
+      ),
+    );
+  }
+
+  Widget _drawTitleLogin() {
+    return Container(
+      alignment: Alignment.center,
+      child: Text(
+        "Inicia Sesión",
+        style: TextStyle(
+          color: ColorsApp.white,
+          fontSize: getProportionateScreenWidth(SizeFonts.sizeTitle2),
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 
@@ -146,24 +192,23 @@ class _LoginPageState extends State<LoginPage> {
       stream: bloc.email,
       builder: (context, snapshot) {
         return Container(
-          margin: EdgeInsets.only(bottom: 15.0),
           child: TextField(
-            style: AppText.blackNormalOpenSans_16,
+            style:
+                TextStyle(color: ColorsApp.white, fontWeight: FontWeight.w600),
             keyboardType: TextInputType.emailAddress,
             onChanged: bloc.changeEmail,
             decoration: InputDecoration(
-              filled: true,
-              fillColor: AppColors.greyOp75,
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-              enabledBorder: AppTextFields.border,
-              focusedBorder: AppTextFields.border,
-              errorBorder: AppTextFields.border,
-              focusedErrorBorder: AppTextFields.border,
-              prefixIcon: Icon(Icons.person_outline, color: AppColors.blue),
-              labelStyle: AppText.blackNormalOpenSans_16,
-              errorStyle: AppText.redNormalOpenSans_12,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              suffixIcon: Icon(Icons.person_outline, color: ColorsApp.white),
+              labelStyle: TextStyle(
+                color: ColorsApp.white,
+              ),
+              hintStyle: TextStyle(
+                color: ColorsApp.white,
+              ),
               labelText: 'Correo electrónico',
-              hintText: 'Correo electrónico',
+              errorStyle: TextStyle(fontWeight: FontWeight.w600),
+              hintText: 'Ingresa tu correo electrónico',
               errorText: snapshot.error,
             ),
           ),
@@ -177,25 +222,25 @@ class _LoginPageState extends State<LoginPage> {
       stream: bloc.password,
       builder: (context, snapshot) {
         return Container(
-          margin: EdgeInsets.only(bottom: 15.0),
           child: TextField(
-            style: AppText.blackNormalOpenSans_16,
+            style:
+                TextStyle(color: ColorsApp.white, fontWeight: FontWeight.w600),
             obscureText: true,
             onChanged: bloc.changePassword,
             decoration: InputDecoration(
-                filled: true,
-                fillColor: AppColors.greyOp75,
-                enabledBorder: AppTextFields.border,
-                focusedBorder: AppTextFields.border,
-                errorBorder: AppTextFields.border,
-                floatingLabelBehavior: FloatingLabelBehavior.never,
-                focusedErrorBorder: AppTextFields.border,
-                prefixIcon: Icon(Icons.lock_outline, color: AppColors.blue),
-                labelText: 'Contraseña',
-                hintText: 'Contraseña',
-                labelStyle: AppText.blackNormalOpenSans_16,
-                errorStyle: AppText.redNormalOpenSans_12,
-                errorText: snapshot.error),
+              labelStyle: TextStyle(
+                color: ColorsApp.white,
+              ),
+              hintStyle: TextStyle(
+                color: ColorsApp.white,
+              ),
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              suffixIcon: Icon(Icons.lock_outline, color: ColorsApp.white),
+              labelText: 'Contraseña',
+              hintText: 'Ingresa tu contraseña',
+              errorStyle: TextStyle(fontWeight: FontWeight.w600),
+              errorText: snapshot.error,
+            ),
           ),
         );
       },
@@ -206,27 +251,40 @@ class _LoginPageState extends State<LoginPage> {
     return StreamBuilder<Object>(
       stream: bloc.submitValid,
       builder: (context, snapshot) {
-        return Container(
-          alignment: Alignment.center,
-          margin: EdgeInsets.symmetric(vertical: 15.0),
-          child: FlatButton(
-            child: Text(
-              'Iniciar sesión',
-              style: AppText.whiteSemiBoldOpenSans_16,
+        return CustomRaisedButton(
+          child: Text(
+            'Iniciar sesión',
+            style: TextStyle(
+              color: ColorsApp.white,
+              fontWeight: FontWeight.w600,
+              fontSize: getProportionateScreenWidth(SizeFonts.sizeText2),
             ),
-            color: AppColors.blueOp50,
-            disabledColor: AppColors.blackOp50,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25.0)),
-            padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
-            onPressed: !snapshot.hasData ? null : bloc.submit,
           ),
+          color: ColorsApp.blue,
+          disabledColor: ColorsApp.blackOp50,
+          icon: SvgIconsApp.arrowRight,
+          onPressed: !snapshot.hasData
+              ? null
+              : !firstClick
+                  ? () async {
+                      setState(() => firstClick = true);
+                      String textMessage = await bloc.submit();
+                      _showMessageAlert(textMessage);
+                    }
+                  : null,
         );
       },
     );
   }
 
-  Widget _drawBackground(Size size) {
-    // return Center(child: drawIconPlayers(size));
+  Widget _drawBackground() {
+    return Container(
+      color: ColorsApp.blackOp25,
+      height: double.infinity,
+      child: Opacity(
+        opacity: 0.4,
+        child: BackgroundsApp.back1,
+      ),
+    );
   }
 }

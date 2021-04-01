@@ -2,6 +2,7 @@ import 'package:flutter_app_tenis/blocs/auth_bloc.dart';
 import 'package:flutter_app_tenis/blocs/repositories/auth_repository.dart';
 import 'package:flutter_app_tenis/blocs/validators/validators.dart';
 import 'package:rxdart/rxdart.dart';
+import 'dart:convert';
 
 class LoginBloc extends Validators {
   AuthRepository repository = AuthRepository();
@@ -14,22 +15,35 @@ class LoginBloc extends Validators {
   Function(String) get changePassword => _passwordController.sink.add;
 
   Stream<String> get email => _emailController.stream.transform(validateEmail);
-  Stream<String> get password => _passwordController.stream.transform(validatePassword);
-  Stream<bool> get submitValid => Observable.combineLatest2(email, password, (email, password) => true);
+  Stream<String> get password =>
+      _passwordController.stream.transform(validatePassword);
+  Stream<bool> get submitValid =>
+      Observable.combineLatest2(email, password, (email, password) => true);
   Observable<bool> get loading => _loadingData.stream;
 
+  // String get password => _passwordController.value;
+  // String get user => _emailController.value;
 
-  void submit() {
+  Future<String> submit() {
     final validEmail = _emailController.value;
     final validPassword = _passwordController.value;
     _loadingData.sink.add(true);
-    login(validEmail, validPassword);
+    return login(validEmail, validPassword);
   }
 
-  login(String email, String password) async {
-    String token = await repository.login(email, password);
-    _loadingData.sink.add(false);
-    authBloc.openSession(token);
+  Future<String> login(String email, String password) async {
+    String resp = await repository.login(email, password);
+    Map decodeData = json.decode(resp);
+    if (decodeData.containsKey("msg")) {
+      _loadingData.sink.add(false);
+      String errorMessage = decodeData["msg"];
+      return errorMessage;
+    } else {
+      _loadingData.sink.add(false);
+      authBloc.openSession(decodeData);
+      String successfulMessage = "Inicio de sesión exitoso";
+      return successfulMessage;
+    }
   }
 
   void dispose() {
