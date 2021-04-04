@@ -1,6 +1,6 @@
 name: flutter_app_tenis
 description: A new Flutter project.
-publish_to: 'none' 
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
@@ -11,7 +11,7 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.0
   rxdart: ^0.22.0
-  shared_preferences: 
+  shared_preferences:
   flutter_svg: ^0.19.1
   http: ^0.12.2
   awesome_dialog: ^1.3.2
@@ -22,24 +22,15 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/
-    - assets/back1.jpg
-    - assets/logo.png
+    - assets/icons/
   fonts:
-    - family: Montserrat
+    - family: Transat
       fonts:
-        - asset: fonts/Montserrat-SemiBold.ttf
-        - asset: fonts/Montserrat-Bold.ttf
-        - asset: fonts/Montserrat-Regular.ttf
-    - family: OpenSans
-      fonts:
-        - asset: fonts/OpenSans-Light.ttf
-        - asset: fonts/OpenSans-Regular.ttf
-        - asset: fonts/OpenSans-SemiBold.ttf
-    - family: Mulish
-      fonts:
-        - asset: fonts/Mulish-Light.ttf
-        - asset: fonts/Mulish-Regular.ttf
-        - asset: fonts/Mulish-SemiBold.ttf
-        - asset: fonts/Mulish-Bold.ttf
-
+        - asset: assets/fonts/TransatStandard.otf
+          weight: 400
+        - asset: assets/fonts/TransatMedium.otf
+          weight: 500
+        - asset: assets/fonts/TransatBold.otf
+          weight: 700
+        - asset: assets/fonts/TransatBlack.otf
+          weight: 900

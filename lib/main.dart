@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         "login": (BuildContext context) => LoginPage(),
         "signup": (BuildContext context) => SignUpPage(),
       },
-      theme: CustomTheme.primaryTheme,
+      theme: theme(),
     );
   }
 

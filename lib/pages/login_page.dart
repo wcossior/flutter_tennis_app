@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/login_bloc.dart';
 import 'package:flutter_app_tenis/pages/signup_page.dart';
-import 'package:flutter_app_tenis/styles/backgrounds.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/styles/svgIcons.dart';
-import 'package:flutter_app_tenis/widgets/CustomRaisedButton.dart';
+import 'package:flutter_app_tenis/utils/keyboard.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter_app_tenis/widgets/customButton.dart';
+import 'package:flutter_app_tenis/widgets/custom_surfix_icon.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -18,17 +19,18 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   LoginBloc loginBloc = LoginBloc();
   bool firstClick = false;
-  String message = "";
+  String errorEmail = "";
+  String errorPassword = "";
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
     return Scaffold(
-      extendBody: true,
+      backgroundColor: ColorsApp.white,
       body: Stack(
+        alignment: Alignment.center,
         children: [
-          _drawBackground(),
           _drawContent(),
           _loadingIndicator(loginBloc),
         ],
@@ -56,13 +58,15 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _drawOptionCreateAccount() {
     return Container(
-      margin: EdgeInsets.only(
-        left: SizeConfig.screenWidth * 0.075,
-        right: SizeConfig.screenWidth * 0.075,
+      padding: EdgeInsets.symmetric(
+        vertical: getProportionateScreenHeight(15.0),
       ),
+      width: SizeConfig.screenWidth * 0.85,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _drawDontYouHaveAnyAccountYet(),
+          SizedBox(width: 10.0),
           _drawButtonSignUp(),
         ],
       ),
@@ -71,57 +75,37 @@ class _LoginPageState extends State<LoginPage> {
 
   Text _drawDontYouHaveAnyAccountYet() {
     return Text(
-      'No tienes cuenta?',
-      style: TextStyle(
-        color: ColorsApp.white,
-        fontSize: getProportionateScreenWidth(SizeFonts.sizeText2),
-        fontWeight: FontWeight.w300,
-      ),
+      '¿No tienes cuenta?',
+      style: Theme.of(context).textTheme.bodyText2,
     );
   }
 
-  TextButton _drawButtonSignUp() {
-    return TextButton(
-      style: ButtonStyle(
-        overlayColor: MaterialStateProperty.all<Color>(
-          ColorsApp.blackOp35,
-        ),
-      ),
+  GestureDetector _drawButtonSignUp() {
+    return GestureDetector(
+      onTap: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => SignUpPage())),
       child: Text(
-        'Crear una cuenta',
-        style: TextStyle(
-          color: ColorsApp.blue,
-          fontSize: getProportionateScreenWidth(SizeFonts.sizeText2),
-          fontWeight: FontWeight.w600,
-        ),
+        "Registrarse",
+        style: Theme.of(context)
+            .textTheme
+            .bodyText2
+            .copyWith(color: ColorsApp.orange),
       ),
-      onPressed: () {
-        return Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => SignUpPage()));
-      },
     );
   }
 
   Widget _drawContent() {
     return SingleChildScrollView(
       child: Container(
-        margin: EdgeInsets.only(
-          top: SizeConfig.screenHeight * 0.1,
-          left: SizeConfig.screenWidth * 0.075,
-          right: SizeConfig.screenWidth * 0.075,
-        ),
+        width: SizeConfig.screenWidth * 0.85,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SafeArea(
               child: Container(
-                height: SizeConfig.screenHeight * 0.02,
+                height: getProportionateScreenHeight(15.0),
               ),
             ),
-            _drawTextWelcome(),
-            SizedBox(height: 5.0),
-            _drawDoYouHaveAaccount(),
-            SizedBox(height: 45.0),
+            SvgIconsApp.auth,
             _drawTitleLogin(),
             SizedBox(height: 25.0),
             _drawFieldEmail(loginBloc),
@@ -129,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
             _drawFieldPassword(loginBloc),
             SizedBox(height: 45.0),
             _drawButtonLogin(loginBloc),
-            SizedBox(height: SizeConfig.screenHeight * 0.12),
+            SizedBox(height: getProportionateScreenHeight(20.0)),
           ],
         ),
       ),
@@ -151,38 +135,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Text _drawTextWelcome() {
-    return Text(
-      'Bienvenido!',
-      style: TextStyle(
-        color: ColorsApp.white,
-        fontSize: getProportionateScreenWidth(SizeFonts.sizeTitle1),
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-
-  Text _drawDoYouHaveAaccount() {
-    return Text(
-      'Tienes una cuenta?',
-      style: TextStyle(
-        color: ColorsApp.white,
-        fontSize: getProportionateScreenWidth(SizeFonts.sizeText2),
-        fontWeight: FontWeight.w300,
-      ),
-    );
-  }
-
   Widget _drawTitleLogin() {
     return Container(
       alignment: Alignment.center,
       child: Text(
         "Inicia Sesión",
-        style: TextStyle(
-          color: ColorsApp.white,
-          fontSize: getProportionateScreenWidth(SizeFonts.sizeTitle2),
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context)
+            .textTheme
+            .headline1
+            .copyWith(color: ColorsApp.green),
       ),
     );
   }
@@ -193,21 +154,12 @@ class _LoginPageState extends State<LoginPage> {
       builder: (context, snapshot) {
         return Container(
           child: TextField(
-            style:
-                TextStyle(color: ColorsApp.white, fontWeight: FontWeight.w600),
             keyboardType: TextInputType.emailAddress,
             onChanged: bloc.changeEmail,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: Icon(Icons.person_outline, color: ColorsApp.white),
-              labelStyle: TextStyle(
-                color: ColorsApp.white,
-              ),
-              hintStyle: TextStyle(
-                color: ColorsApp.white,
-              ),
+              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
               labelText: 'Correo electrónico',
-              errorStyle: TextStyle(fontWeight: FontWeight.w600),
               hintText: 'Ingresa tu correo electrónico',
               errorText: snapshot.error,
             ),
@@ -223,22 +175,13 @@ class _LoginPageState extends State<LoginPage> {
       builder: (context, snapshot) {
         return Container(
           child: TextField(
-            style:
-                TextStyle(color: ColorsApp.white, fontWeight: FontWeight.w600),
             obscureText: true,
             onChanged: bloc.changePassword,
             decoration: InputDecoration(
-              labelStyle: TextStyle(
-                color: ColorsApp.white,
-              ),
-              hintStyle: TextStyle(
-                color: ColorsApp.white,
-              ),
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: Icon(Icons.lock_outline, color: ColorsApp.white),
+              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
               labelText: 'Contraseña',
               hintText: 'Ingresa tu contraseña',
-              errorStyle: TextStyle(fontWeight: FontWeight.w600),
               errorText: snapshot.error,
             ),
           ),
@@ -254,37 +197,20 @@ class _LoginPageState extends State<LoginPage> {
         return CustomRaisedButton(
           child: Text(
             'Iniciar sesión',
-            style: TextStyle(
-              color: ColorsApp.white,
-              fontWeight: FontWeight.w600,
-              fontSize: getProportionateScreenWidth(SizeFonts.sizeText2),
-            ),
+            style: Theme.of(context).textTheme.button,
           ),
-          color: ColorsApp.blue,
-          disabledColor: ColorsApp.blackOp50,
-          icon: SvgIconsApp.arrowRight,
           onPressed: !snapshot.hasData
               ? null
               : !firstClick
                   ? () async {
                       setState(() => firstClick = true);
+                      KeyboardUtil.hideKeyboard(context);
                       String textMessage = await bloc.submit();
                       _showMessageAlert(textMessage);
                     }
                   : null,
         );
       },
-    );
-  }
-
-  Widget _drawBackground() {
-    return Container(
-      color: ColorsApp.blackOp25,
-      height: double.infinity,
-      child: Opacity(
-        opacity: 0.4,
-        child: BackgroundsApp.back1,
-      ),
     );
   }
 }

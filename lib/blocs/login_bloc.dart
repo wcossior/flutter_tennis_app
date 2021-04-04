@@ -15,14 +15,9 @@ class LoginBloc extends Validators {
   Function(String) get changePassword => _passwordController.sink.add;
 
   Stream<String> get email => _emailController.stream.transform(validateEmail);
-  Stream<String> get password =>
-      _passwordController.stream.transform(validatePassword);
-  Stream<bool> get submitValid =>
-      Observable.combineLatest2(email, password, (email, password) => true);
+  Stream<String> get password => _passwordController.stream.transform(validatePassword);
+  Stream<bool> get submitValid => Observable.combineLatest2(email, password, (email, password) => true);
   Observable<bool> get loading => _loadingData.stream;
-
-  // String get password => _passwordController.value;
-  // String get user => _emailController.value;
 
   Future<String> submit() {
     final validEmail = _emailController.value;

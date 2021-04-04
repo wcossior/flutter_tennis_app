@@ -5,8 +5,7 @@ import 'dart:convert';
 class AuthBloc {
   String _tokenString;
   final prefs = new UserPreferences();
-  final PublishSubject _isSessionValid =
-      PublishSubject<bool>(); //streamController
+  final PublishSubject _isSessionValid = PublishSubject<bool>(); //streamController
   Observable<bool> get isSessionValid => _isSessionValid.stream; //strean
 
   void dispose() {

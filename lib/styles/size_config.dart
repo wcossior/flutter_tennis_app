@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SizeFonts {
-  static double sizeTitle1 = 30;
+  static double sizeTitle1 = 38;
   static double sizeTitle2 = 25;
   static double sizeTitle3 = 20;
   static double sizeText1 = 16;

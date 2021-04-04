@@ -21,6 +21,10 @@ class UserPreferences {
     var token = _prefs.get("token");
     return token;
   }
+  get wasShownMessage {
+    var mssg = _prefs.get("mssg");
+    return mssg;
+  }
 
   get user {
     var user = _prefs.get("user");
@@ -31,6 +35,9 @@ class UserPreferences {
   set token(String value) {
     _prefs.setString('token', value);
   }
+  set wasShownMessage(bool value) {
+    _prefs.setBool('mssg', value);
+  }
 
   set user(String user) {
     _prefs.setString('user', user);
@@ -39,6 +46,7 @@ class UserPreferences {
   logout() {
     _prefs.remove("token");
     _prefs.remove("user");
+    _prefs.remove("mssg");
   }
 
   isLogged() {
