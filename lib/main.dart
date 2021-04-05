@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/auth_bloc.dart';
 import 'package:flutter_app_tenis/pages/home_page.dart';
 import 'package:flutter_app_tenis/pages/login_page.dart';
+import 'package:flutter_app_tenis/pages/notification_page.dart';
 import 'package:flutter_app_tenis/pages/signup_page.dart';
+import 'package:flutter_app_tenis/pages/tournament_page.dart';
 import 'package:flutter_app_tenis/preferences/userPreferences.dart';
 import 'package:flutter_app_tenis/styles/theme.dart';
 import 'package:flutter/services.dart';
@@ -29,6 +31,8 @@ class MyApp extends StatelessWidget {
         "home": (BuildContext context) => HomePage(),
         "login": (BuildContext context) => LoginPage(),
         "signup": (BuildContext context) => SignUpPage(),
+        "notification": (BuildContext context) => NotificationPage(),
+        "tournament": (BuildContext context) => TournamentPage(),
       },
       theme: theme(),
     );

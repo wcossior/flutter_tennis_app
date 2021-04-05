@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 
-class CustomRaisedButton extends StatelessWidget {
+class CustomButton extends StatelessWidget {
   final Widget child;
   final Function onPressed;
 
-  const CustomRaisedButton({
+  const CustomButton({
     Key key,
     @required this.child,
     @required this.onPressed,
@@ -18,9 +19,12 @@ class CustomRaisedButton extends StatelessWidget {
       child: SizedBox(
         width: SizeConfig.screenWidth,
         height: getProportionateScreenHeight(56),
-        child: RaisedButton(
-          splashColor: Colors.grey,
-          elevation: 5.0,
+        child: MaterialButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(35.0),
+          ),
+          color: ColorsApp.orange,
+          disabledColor: ColorsApp.blueObscuredOp50,
           child: child,
           onPressed: onPressed,
         ),

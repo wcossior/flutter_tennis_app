@@ -1,4 +1,4 @@
-import 'package:flutter_app_tenis/blocs/repositories/signup_repository.dart';
+import 'package:flutter_app_tenis/repositories/signup_repository.dart';
 import 'package:flutter_app_tenis/blocs/validators/validators.dart';
 import 'package:rxdart/rxdart.dart';
 import 'dart:convert';

@@ -19,8 +19,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   LoginBloc loginBloc = LoginBloc();
   bool firstClick = false;
-  String errorEmail = "";
-  String errorPassword = "";
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: getProportionateScreenHeight(15.0),
               ),
             ),
-            SvgIconsApp.auth,
+            SvgIconsApp.player,
             _drawTitleLogin(),
             SizedBox(height: 25.0),
             _drawFieldEmail(loginBloc),
@@ -194,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
     return StreamBuilder<Object>(
       stream: bloc.submitValid,
       builder: (context, snapshot) {
-        return CustomRaisedButton(
+        return CustomButton(
           child: Text(
             'Iniciar sesión',
             style: Theme.of(context).textTheme.button,

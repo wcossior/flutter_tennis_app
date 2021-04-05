@@ -24,10 +24,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
     return Container(
       child: Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: ColorsApp.blueObscured),
-          elevation: 0.0,
-        ),
         backgroundColor: Colors.white,
         body: Stack(
           alignment: Alignment.center,
@@ -215,7 +211,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return StreamBuilder(
       stream: bloc.submitValid,
       builder: (context, snapshot) {
-        return CustomRaisedButton(
+        return CustomButton(
           child: Text(
             'Registrarse',
             style: Theme.of(context).textTheme.button,
@@ -225,8 +221,8 @@ class _SignUpPageState extends State<SignUpPage> {
               : !firstClick
                   ? () async {
                       setState(() => firstClick = true);
-                      String textMessage = await bloc.submit();
                       KeyboardUtil.hideKeyboard(context);
+                      String textMessage = await bloc.submit();
                       if (textMessage == "Cuenta creada exitosamente!") {
                         var message = showMessageSignUpSuccessful();
                         await message.show();

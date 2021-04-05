@@ -16,15 +16,15 @@ ThemeData theme() {
       color: ColorsApp.white,
       elevation: 0.0,
       brightness: Brightness.light,
-      iconTheme: IconThemeData(color: ColorsApp.blue),
+      iconTheme: IconThemeData(color: ColorsApp.blueObscured),
     ),
     accentColor: ColorsApp.orange,
     buttonTheme: ButtonThemeData(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(35.0),
       ),
-      disabledColor: ColorsApp.blueObscuredOp50,
       buttonColor: ColorsApp.orange,
+      disabledColor: ColorsApp.blueObscuredOp50
     ),
     textTheme: textTheme(),
     inputDecorationTheme: inputDecorationTheme(),
@@ -49,10 +49,15 @@ TextTheme textTheme() {
       fontWeight: FontWeight.w500,
       color: ColorsApp.blueObscured,
     ),
-    bodyText1: TextStyle(
+    subtitle2: TextStyle(
       fontSize: 18.0,
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.w600,
       color: ColorsApp.white,
+    ),
+    bodyText1: TextStyle(
+      fontSize: 14.0,
+      fontWeight: FontWeight.w900,
+      color: ColorsApp.blueObscured,
     ),
     bodyText2: TextStyle(
       fontSize: 18.0,
