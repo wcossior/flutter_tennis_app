@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/tournament_bloc.dart';
 import 'package:flutter_app_tenis/models/tournament_model.dart';
+import 'package:flutter_app_tenis/pages/Scheduling_page.dart';
+import 'package:flutter_app_tenis/pages/categories_page.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/styles/svgIcons.dart';
@@ -14,7 +16,6 @@ class TournamentPage extends StatefulWidget {
 
 class _TournamentPageState extends State<TournamentPage> with AutomaticKeepAliveClientMixin<TournamentPage> {
   TournamentBloc tournBloc = TournamentBloc();
-  final key = GlobalKey();
   @override
   void initState() {
     tournBloc.getTournament();
@@ -29,7 +30,6 @@ class _TournamentPageState extends State<TournamentPage> with AutomaticKeepAlive
     super.build(context);
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.025),
       child: _drawContent(),
     );
   }
@@ -52,7 +52,7 @@ class _TournamentPageState extends State<TournamentPage> with AutomaticKeepAlive
 
   Widget _drawTournament(List<Tournament> data) {
     return ListView(
-      padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.055),
       children: _getTournaments(data),
     );
   }
@@ -63,6 +63,7 @@ class _TournamentPageState extends State<TournamentPage> with AutomaticKeepAlive
 
     tournamentsList.forEach((tournam) {
       final widgetTemp = Card(
+        margin: EdgeInsets.only(bottom: getProportionateScreenHeight(18.0)),
         elevation: 4.0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(7.0),
@@ -92,8 +93,8 @@ class _TournamentPageState extends State<TournamentPage> with AutomaticKeepAlive
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _drawOptionPlayoffs(),
-              _drawOptionGroups(),
+              _drawOptionScheduling(tournam.id),
+              _drawOptionCategories(tournam.id),
             ],
           )
         ],
@@ -101,15 +102,21 @@ class _TournamentPageState extends State<TournamentPage> with AutomaticKeepAlive
     );
   }
 
-  Row _drawOptionGroups() {
+  Row _drawOptionCategories(String idTournament) {
     return Row(
       children: [
-        SvgIconsApp.group,
-        SizedBox(width: 6.0),
+        SvgIconsApp.category,
+        SizedBox(width: 8.0),
         GestureDetector(
-          onTap: () {},
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => CategoryPage(
+                idTournament: idTournament,
+              ),
+            ),
+          ),
           child: Text(
-            "Grupos",
+            "Categorías",
             style: Theme.of(context).textTheme.bodyText2.copyWith(
                   color: ColorsApp.orange,
                   fontWeight: FontWeight.w700,
@@ -120,15 +127,21 @@ class _TournamentPageState extends State<TournamentPage> with AutomaticKeepAlive
     );
   }
 
-  Row _drawOptionPlayoffs() {
+  Row _drawOptionScheduling(String idTournament) {
     return Row(
       children: [
-        SvgIconsApp.playoffs,
-        SizedBox(width: 6.0),
+        SvgIconsApp.schedule,
+        SizedBox(width: 8.0),
         GestureDetector(
-          onTap: () {},
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => SchedulingPage(
+                idTournament: idTournament,
+              ),
+            ),
+          ),
           child: Text(
-            "Eliminatorias",
+            "Programación",
             style: Theme.of(context).textTheme.bodyText2.copyWith(
                   color: ColorsApp.orange,
                   fontWeight: FontWeight.w700,
@@ -156,11 +169,11 @@ class _TournamentPageState extends State<TournamentPage> with AutomaticKeepAlive
   Expanded _drawNumberCourts(Tournament tournam) {
     return Expanded(
       child: Container(
-        padding: EdgeInsets.only(left: getProportionateScreenWidth(13.0)),
+        padding: EdgeInsets.only(left: getProportionateScreenWidth(10.0)),
         child: Row(
           children: [
             SvgIconsApp.court,
-            SizedBox(width: 6.0),
+            SizedBox(width: 8.0),
             Flexible(
               child: Text(
                 "Canchas " + tournam.numeroCanchas.toString(),
@@ -176,11 +189,11 @@ class _TournamentPageState extends State<TournamentPage> with AutomaticKeepAlive
   Expanded _drawEndDate(Tournament tournam) {
     return Expanded(
       child: Container(
-        padding: EdgeInsets.only(left: getProportionateScreenWidth(13.0)),
+        padding: EdgeInsets.only(left: getProportionateScreenWidth(10.0)),
         child: Row(
           children: [
             SvgIconsApp.calendarEnd,
-            SizedBox(width: 6.0),
+            SizedBox(width: 8.0),
             Flexible(
               child: Text(
                 tournam.fechaFin,
@@ -197,7 +210,7 @@ class _TournamentPageState extends State<TournamentPage> with AutomaticKeepAlive
     return Expanded(
       child: Container(
         //se puso paddin porque no funciona el align de row
-        padding: EdgeInsets.only(left: getProportionateScreenWidth(13.0)),
+        padding: EdgeInsets.only(left: getProportionateScreenWidth(10.0)),
         child: Row(
           children: [
             SvgIconsApp.calendarStart,
@@ -230,7 +243,7 @@ class _TournamentPageState extends State<TournamentPage> with AutomaticKeepAlive
       width: double.infinity,
       child: Row(
         children: [
-          SvgIconsApp.winner,
+          SvgIconsApp.winners,
           SizedBox(width: 12.0),
           Flexible(
             child: Text(

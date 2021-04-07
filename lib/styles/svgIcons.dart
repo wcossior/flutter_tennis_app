@@ -11,13 +11,34 @@ class SvgIconsApp {
     child: SvgPicture.asset('assets/icons/Player.svg'),
   );
 
-  static var winner = Container(
+  static var winner = ClipRRect(
+    borderRadius: BorderRadius.only(topLeft: Radius.circular(7.0), bottomRight: Radius.circular(7.0)),
+    child: SvgPicture.asset(
+      'assets/icons/Winner.svg',
+      fit: BoxFit.cover,
+      width: getProportionateScreenWidth(100.0),
+      height: getProportionateScreenHeight(100.0),
+    ),
+  );
+
+  static var tournament = Container(
     padding: EdgeInsets.all(getProportionateScreenWidth(6.0)),
     height: getProportionateScreenHeight(65.0),
     width: getProportionateScreenWidth(75.0),
-    child: SvgPicture.asset('assets/icons/Winner.svg'),
+    child: SvgPicture.asset('assets/icons/Tournament.svg'),
     decoration: new BoxDecoration(
-      color: ColorsApp.orange,
+      color: ColorsApp.green,
+      shape: BoxShape.circle,
+    ),
+  );
+
+  static var winners = Container(
+    padding: EdgeInsets.all(getProportionateScreenWidth(6.0)),
+    height: getProportionateScreenHeight(75.0),
+    width: getProportionateScreenWidth(85.0),
+    child: SvgPicture.asset('assets/icons/Winners.svg'),
+    decoration: new BoxDecoration(
+      color: ColorsApp.green,
       shape: BoxShape.circle,
     ),
   );
@@ -51,9 +72,43 @@ class SvgIconsApp {
 
   static var court = Container(
     height: getProportionateScreenHeight(19.0),
-    width: getProportionateScreenWidth(19.0),
+    width: getProportionateScreenWidth(16.0),
     child: SvgPicture.asset(
       'assets/icons/Court.svg',
+      color: ColorsApp.blueObscured,
+    ),
+  );
+
+  static var players = Container(
+    height: getProportionateScreenHeight(19.0),
+    width: getProportionateScreenWidth(19.0),
+    child: SvgPicture.asset(
+      'assets/icons/Group.svg',
+      color: ColorsApp.blueObscured,
+    ),
+  );
+
+  static var title = Container(
+    height: getProportionateScreenHeight(19.0),
+    width: getProportionateScreenWidth(19.0),
+    child: SvgPicture.asset(
+      'assets/icons/Title.svg',
+      color: ColorsApp.blueObscured,
+    ),
+  );
+
+  static var avatarPlayer = SvgPicture.asset(
+    'assets/icons/Avatar.svg',
+    height: getProportionateScreenHeight(22.0),
+    width: getProportionateScreenWidth(22.0),
+    color: ColorsApp.blueObscured,
+  );
+
+  static var type = Container(
+    height: getProportionateScreenHeight(19.0),
+    width: getProportionateScreenWidth(19.0),
+    child: SvgPicture.asset(
+      'assets/icons/Type.svg',
       color: ColorsApp.blueObscured,
     ),
   );
@@ -76,6 +131,15 @@ class SvgIconsApp {
     ),
   );
 
+  static var detail = Container(
+    height: getProportionateScreenHeight(25.0),
+    width: getProportionateScreenWidth(25.0),
+    child: SvgPicture.asset(
+      'assets/icons/Detail.svg',
+      color: ColorsApp.blueObscured,
+    ),
+  );
+
   static var playoffs = Container(
     height: getProportionateScreenHeight(25.0),
     width: getProportionateScreenWidth(25.0),
@@ -85,20 +149,29 @@ class SvgIconsApp {
     ),
   );
 
-  static var logout = Container(
+  static var category = Container(
     height: getProportionateScreenHeight(25.0),
     width: getProportionateScreenWidth(25.0),
     child: SvgPicture.asset(
-      'assets/icons/Logout.svg',
+      'assets/icons/Category.svg',
       color: ColorsApp.blueObscured,
     ),
   );
 
-  static var user = Container(
-    height: getProportionateScreenHeight(35.0),
-    width: getProportionateScreenWidth(35.0),
+  static var schedule = Container(
+    height: getProportionateScreenHeight(20.0),
+    width: getProportionateScreenWidth(20.0),
     child: SvgPicture.asset(
-      'assets/icons/User.svg',
+      'assets/icons/Schedule.svg',
+      color: ColorsApp.blueObscured,
+    ),
+  );
+
+  static var logout = Container(
+    height: getProportionateScreenHeight(18.0),
+    width: getProportionateScreenWidth(20.0),
+    child: SvgPicture.asset(
+      'assets/icons/Logout.svg',
       color: ColorsApp.blueObscured,
     ),
   );

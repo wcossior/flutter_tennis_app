@@ -1,7 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/home_bloc.dart';
-import 'package:flutter_app_tenis/pages/notification_page.dart';
+import 'package:flutter_app_tenis/pages/notifications_page.dart';
 import 'package:flutter_app_tenis/pages/tournament_page.dart';
 import 'package:flutter_app_tenis/preferences/userPreferences.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -48,49 +48,74 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  AppBar _drawAppBar(BuildContext context) {
+  void _areYouSureToLogout() {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.INFO,
+      headerAnimationLoop: true,
+      animType: AnimType.BOTTOMSLIDE,
+      showCloseIcon: false,
+      closeIcon: Icon(Icons.close_fullscreen_outlined),
+      title: 'Cerrar Sesión',
+      desc: '¿Esta seguro de salir?',
+      btnOkText: "Si",
+      btnOkColor: ColorsApp.orange,
+      btnCancelText: "No",
+      btnCancelColor: ColorsApp.green,
+      btnCancelOnPress: () {},
+      btnOkOnPress: bloc.logoutUser,
+    )..show();
+  }
+
+  Widget _drawAppBar(BuildContext context) {
     return AppBar(
+      backgroundColor: ColorsApp.white,
+      elevation: 0.0,
+      brightness: Brightness.light,
       title: _drawUser(context),
+      toolbarHeight: 70.0,
       actions: [
-        GestureDetector(
-          onTap: bloc.logoutUser,
-          child: Container(
-            margin: EdgeInsets.only(right: getProportionateScreenWidth(22.0)),
-            child: Row(
-              children: [
-                SvgIconsApp.logout,
-                SizedBox(width: 6.0),
-                Text(
-                  "Cerrar Session",
-                  style: Theme.of(context).textTheme.bodyText2.copyWith(color: ColorsApp.orange,fontWeight: FontWeight.w700,),
-                ),
-              ],
-            ),
-          ),
-        ),
+        _drawLogoutOption(context),
       ],
     );
   }
 
-  Container _drawUser(BuildContext context) {
+  Widget _drawLogoutOption(BuildContext context) {
+    return GestureDetector(
+      onTap: _areYouSureToLogout,
+      child: Container(
+        margin: EdgeInsets.only(right: getProportionateScreenWidth(22.0)),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SvgIconsApp.logout,
+            SizedBox(width: 6.0),
+            Text(
+              "Cerrar Session",
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    color: ColorsApp.orange,
+                    fontWeight: FontWeight.w700,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _drawUser(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 15.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SvgIconsApp.user,
+          SvgIconsApp.avatarPlayer,
           SizedBox(width: 10.0),
-          Column(
-            children: [
-              Text(
-                "Hola!",
-                style: Theme.of(context).textTheme.headline2.copyWith(color: ColorsApp.blueObscured),
-              ),
-              Text(
-                prefs.user["nombre"],
-                style: Theme.of(context).textTheme.bodyText2,
-              )
-            ],
-          )
+          Text(
+            prefs.user["nombre"].substring(0, 12) + "...",
+            style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+          ),
         ],
       ),
     );

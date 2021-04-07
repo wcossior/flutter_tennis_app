@@ -13,19 +13,12 @@ ThemeData theme() {
     scaffoldBackgroundColor: ColorsApp.white,
     fontFamily: "Transat",
     appBarTheme: AppBarTheme(
-      color: ColorsApp.white,
-      elevation: 0.0,
+      centerTitle: true,
+      color: ColorsApp.green,
       brightness: Brightness.light,
-      iconTheme: IconThemeData(color: ColorsApp.blueObscured),
+      iconTheme: IconThemeData(color: ColorsApp.white),
     ),
     accentColor: ColorsApp.orange,
-    buttonTheme: ButtonThemeData(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(35.0),
-      ),
-      buttonColor: ColorsApp.orange,
-      disabledColor: ColorsApp.blueObscuredOp50
-    ),
     textTheme: textTheme(),
     inputDecorationTheme: inputDecorationTheme(),
     visualDensity: VisualDensity.adaptivePlatformDensity,
