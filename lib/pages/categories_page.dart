@@ -211,11 +211,9 @@ class _CategoryPageState extends State<CategoryPage> {
         children: [
           SvgIconsApp.players,
           SizedBox(width: 8.0),
-          Flexible(
-            child: Text(
-              "Jugadores " + category.numeroJugadores.toString(),
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
+          Text(
+            "Jugadores " + category.numeroJugadores.toString(),
+            style: Theme.of(context).textTheme.bodyText1,
           ),
         ],
       ),
@@ -228,11 +226,9 @@ class _CategoryPageState extends State<CategoryPage> {
         children: [
           SvgIconsApp.type,
           SizedBox(width: 8.0),
-          Flexible(
-            child: Text(
-              category.tipo,
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
+          Text(
+            category.tipo,
+            style: Theme.of(context).textTheme.bodyText1,
           ),
         ],
       ),
@@ -246,11 +242,9 @@ class _CategoryPageState extends State<CategoryPage> {
         children: [
           SvgIconsApp.title,
           SizedBox(width: 6.0),
-          Flexible(
-            child: Text(
-              category.nombre,
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
+          Text(
+            category.nombre,
+            style: Theme.of(context).textTheme.bodyText1,
           ),
         ],
       ),

@@ -11,6 +11,32 @@ class SvgIconsApp {
     child: SvgPicture.asset('assets/icons/Player.svg'),
   );
 
+  static var courtDetail = SvgPicture.asset(
+    'assets/icons/CourtDetail.svg',
+    width: getProportionateScreenWidth(100.0),
+    height: getProportionateScreenHeight(100.0),
+  );
+
+  static var playerDetail = SvgPicture.asset(
+    'assets/icons/PlayerDetail.svg',
+    width: getProportionateScreenWidth(35.0),
+    height: getProportionateScreenHeight(35.0),
+    color: ColorsApp.orange,
+  );
+
+  static var player2Detail = SvgPicture.asset(
+    'assets/icons/Player2Detail.svg',
+    width: getProportionateScreenWidth(35.0),
+    height: getProportionateScreenHeight(35.0),
+    color: ColorsApp.orange,
+  );
+
+  static var ball = SvgPicture.asset(
+    'assets/icons/TennisBall.svg',
+    width: getProportionateScreenWidth(16.0),
+    height: getProportionateScreenHeight(16.0),
+  );
+
   static var winner = ClipRRect(
     borderRadius: BorderRadius.only(topLeft: Radius.circular(7.0), bottomRight: Radius.circular(7.0)),
     child: SvgPicture.asset(
@@ -26,7 +52,7 @@ class SvgIconsApp {
     height: getProportionateScreenHeight(65.0),
     width: getProportionateScreenWidth(75.0),
     child: SvgPicture.asset('assets/icons/Tournament.svg'),
-    decoration: new BoxDecoration(
+    decoration: BoxDecoration(
       color: ColorsApp.green,
       shape: BoxShape.circle,
     ),
@@ -37,7 +63,7 @@ class SvgIconsApp {
     height: getProportionateScreenHeight(75.0),
     width: getProportionateScreenWidth(85.0),
     child: SvgPicture.asset('assets/icons/Winners.svg'),
-    decoration: new BoxDecoration(
+    decoration: BoxDecoration(
       color: ColorsApp.green,
       shape: BoxShape.circle,
     ),

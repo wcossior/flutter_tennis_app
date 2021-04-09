@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/game_bloc.dart';
 import 'package:flutter_app_tenis/models/game_model.dart';
+import 'package:flutter_app_tenis/pages/detailGame_page.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/styles/svgIcons.dart';
+import 'package:flutter_app_tenis/utils/keyboard.dart';
+import 'package:flutter_app_tenis/widgets/custom_surfix_icon.dart';
 
 class GamesPage extends StatefulWidget {
   final String idCategory;
@@ -29,74 +32,88 @@ class _GamesPageState extends State<GamesPage> {
       appBar: AppBar(
         title: Text("Partidos", style: Theme.of(context).textTheme.subtitle2),
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Expanded(child: _drawContent()),
-            _drawFooter(),
-          ],
-        ),
+      body: Stack(
+        children: [_drawContent(), _drawNoResults()],
       ),
     );
   }
 
-  Widget _drawFooter() {
-    return Container(
-      color: ColorsApp.grey,
-      width: double.infinity,
-      height: SizeConfig.screenHeight * 0.25,
-      child: Container(
-        child: Text(
-          "Auspiciadores:",
-          style: Theme.of(context).textTheme.headline1.copyWith(color: ColorsApp.white),
-        ),
-      ),
-    );
-  }
-
-  StreamBuilder<List<Game>> _drawContent() {
+  Widget _drawNoResults() {
     return StreamBuilder(
-      stream: gameBloc.game,
+      stream: gameBloc.games,
       builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data.isNotEmpty) {
-          return _drawGames(snapshot.data);
+        if (gameBloc.allGames.isNotEmpty && snapshot.data.isEmpty) {
+          return Center(child: Text("Sin resultados"));
+        } else {
+          return Container();
         }
+      },
+    );
+  }
+
+  Widget _searchBar() {
+    return gameBloc.allGames.isNotEmpty
+        ? StreamBuilder(
+            stream: gameBloc.games,
+            builder: (context, snapshot) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  maxLength: 20,
+                  decoration: InputDecoration(
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Search.svg"),
+                    labelText: "Buscador",
+                    hintText: 'Ingrese el nombre del jugador',
+                  ),
+                  onChanged: (text) {
+                    gameBloc.filterGames(text);
+                  },
+                ),
+              );
+            },
+          )
+        : Container();
+  }
+
+  Widget _drawContent() {
+    return StreamBuilder(
+      stream: gameBloc.games,
+      builder: (context, snapshot) {
         if (snapshot.data == null) {
           return Center(child: CircularProgressIndicator());
         } else {
-          return Center(child: Text("No hay partidos"));
+          return _drawGames(snapshot.data);
         }
       },
     );
   }
 
   Widget _drawGames(List<Game> data) {
-    return ListView(
-      padding: EdgeInsets.only(
-        left: SizeConfig.screenWidth * 0.055,
-        right: SizeConfig.screenWidth * 0.055,
-        top: SizeConfig.screenHeight * 0.025,
-      ),
-      children: _getGames(data),
-    );
+    return data.isEmpty && gameBloc.allGames.isEmpty
+        ? Center(child: Text("No hay partidos"))
+        : ListView.builder(
+            padding: EdgeInsets.only(
+              left: SizeConfig.screenWidth * 0.055,
+              right: SizeConfig.screenWidth * 0.055,
+              top: SizeConfig.screenHeight * 0.025,
+            ),
+            itemBuilder: (ctx, index) {
+              return index == 0 ? _searchBar() : _getGames(data[index - 1]);
+            },
+            itemCount: data.length + 1,
+          );
   }
 
-  List<Widget> _getGames(List<Game> data) {
-    final List<Widget> drawnCategories = [];
-    final cateogyList = data;
-
-    cateogyList.forEach((game) {
-      final widgetTemp = Card(
-        margin: EdgeInsets.only(bottom: getProportionateScreenHeight(18.0)),
-        elevation: 4.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(7.0),
-        ),
-        child: _drawInfoCard(game),
-      );
-      drawnCategories.add(widgetTemp);
-    });
-    return drawnCategories;
+  Widget _getGames(Game game) {
+    return Card(
+      margin: EdgeInsets.only(bottom: getProportionateScreenHeight(18.0)),
+      elevation: 4.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(7.0),
+      ),
+      child: _drawInfoCard(game),
+    );
   }
 
   Widget _drawInfoCard(Game game) {
@@ -110,12 +127,12 @@ class _GamesPageState extends State<GamesPage> {
         _drawPlayer(game.jug2, game.scoreJugador2, game.scoreJugador1),
         SizedBox(height: getProportionateScreenHeight(8.0)),
         Divider(thickness: 1.2, color: ColorsApp.greyObscured),
-        _drawOptionDetails(),
+        _drawOptionDetails(game),
       ],
     );
   }
 
-  Widget _drawOptionDetails() {
+  Widget _drawOptionDetails(Game game) {
     return Container(
       padding: EdgeInsets.only(
         top: getProportionateScreenHeight(8.0),
@@ -129,15 +146,16 @@ class _GamesPageState extends State<GamesPage> {
           SvgIconsApp.detail,
           SizedBox(width: 8.0),
           GestureDetector(
-            onTap: () {},
-            // => Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => GamesPage(
-            //       idCategory: idCategory,
-            //       typeInfo: "partidosgrupo",
-            //     ),
-            //   ),
-            // ),
+            onTap: () {
+              KeyboardUtil.hideKeyboard(context);
+              return Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => DetailGamePage(
+                    game: game,
+                  ),
+                ),
+              );
+            },
             child: Text(
               "Ver detalles",
               style: Theme.of(context).textTheme.bodyText2.copyWith(
@@ -232,7 +250,7 @@ class _GamesPageState extends State<GamesPage> {
         vertical: getProportionateScreenHeight(3.0),
       ),
       child: Text(
-        "Ganador",
+        "Ganó",
         style: Theme.of(context).textTheme.bodyText1.copyWith(
               color: ColorsApp.white,
               fontSize: 10.0,

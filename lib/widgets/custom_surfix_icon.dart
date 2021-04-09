@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -22,6 +23,7 @@ class CustomSurffixIcon extends StatelessWidget {
       child: SvgPicture.asset(
         svgIcon,
         height: getProportionateScreenWidth(18),
+        color: ColorsApp.blueObscured,
       ),
     );
   }
