@@ -36,6 +36,11 @@ class SvgIconsApp {
     width: getProportionateScreenWidth(16.0),
     height: getProportionateScreenHeight(16.0),
   );
+  static var rackets = SvgPicture.asset(
+    'assets/icons/Rackets.svg',
+    width: getProportionateScreenWidth(30.0),
+    height: getProportionateScreenHeight(30.0),
+  );
 
   static var winner = ClipRRect(
     borderRadius: BorderRadius.only(topLeft: Radius.circular(7.0), bottomRight: Radius.circular(7.0)),
