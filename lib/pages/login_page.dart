@@ -5,7 +5,6 @@ import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/styles/svgIcons.dart';
 import 'package:flutter_app_tenis/utils/keyboard.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter_app_tenis/widgets/customButton.dart';
 import 'package:flutter_app_tenis/widgets/custom_surfix_icon.dart';
 
@@ -37,23 +36,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _showMessageAlert(String message) {
-    String isValidData = "Inicio de sesión exitoso";
-    if (message != isValidData) {
-      AwesomeDialog(
-        context: context,
-        dialogType: DialogType.WARNING,
-        animType: AnimType.SCALE,
-        title: message,
-        desc: "",
-        autoHide: Duration(seconds: 3),
-      )..show();
-      setState(() {
-        firstClick = false;
-      });
-    }
-  }
-
   Widget _drawOptionCreateAccount() {
     return Container(
       padding: EdgeInsets.symmetric(
@@ -80,14 +62,10 @@ class _LoginPageState extends State<LoginPage> {
 
   GestureDetector _drawButtonSignUp() {
     return GestureDetector(
-      onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => SignUpPage())),
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUpPage())),
       child: Text(
         "Registrarse",
-        style: Theme.of(context)
-            .textTheme
-            .bodyText2
-            .copyWith(color: ColorsApp.orange),
+        style: Theme.of(context).textTheme.bodyText2.copyWith(color: ColorsApp.orange),
       ),
     );
   }
@@ -124,9 +102,7 @@ class _LoginPageState extends State<LoginPage> {
       builder: (context, snap) {
         return Container(
           child: Center(
-            child: (snap.hasData && snap.data)
-                ? CircularProgressIndicator()
-                : null,
+            child: (snap.hasData && snap.data) ? CircularProgressIndicator() : null,
           ),
         );
       },
@@ -138,10 +114,7 @@ class _LoginPageState extends State<LoginPage> {
       alignment: Alignment.center,
       child: Text(
         "Inicia Sesión",
-        style: Theme.of(context)
-            .textTheme
-            .headline1
-            .copyWith(color: ColorsApp.green),
+        style: Theme.of(context).textTheme.headline1.copyWith(color: ColorsApp.green),
       ),
     );
   }
@@ -203,8 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                   ? () async {
                       setState(() => firstClick = true);
                       KeyboardUtil.hideKeyboard(context);
-                      String textMessage = await bloc.submit();
-                      _showMessageAlert(textMessage);
+                      await bloc.submit();
                     }
                   : null,
         );

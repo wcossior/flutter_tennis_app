@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'dart:io';
+
 class Validators {
-  final validateEmail =
-      StreamTransformer<String, String>.fromHandlers(handleData: (email, sink) {
+  final validateEmail = StreamTransformer<String, String>.fromHandlers(handleData: (email, sink) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regExp = new RegExp(pattern);
@@ -14,8 +15,7 @@ class Validators {
     }
   });
 
-  final validateName = StreamTransformer<String, String>.fromHandlers(
-      handleData: (nombre, sink) {
+  final validateName = StreamTransformer<String, String>.fromHandlers(handleData: (nombre, sink) {
     Pattern pattern = r'[a-zA-Z]';
     RegExp regExp = new RegExp(pattern);
 
@@ -26,8 +26,17 @@ class Validators {
     }
   });
 
-  final validateCi =
-      StreamTransformer<String, String>.fromHandlers(handleData: (ci, sink) {
+  final validateImg = StreamTransformer<File, File>.fromHandlers(handleData: (img, sink) {
+    String path = img.path;
+
+    if (path.contains("jpg") || path.contains("png") || path.contains("jpeg")) {
+      sink.add(img);
+    } else {
+      sink.addError('Nombre incorrecto');
+    }
+  });
+
+  final validateCi = StreamTransformer<String, String>.fromHandlers(handleData: (ci, sink) {
     Pattern pattern = r'^[0-9]*$';
     RegExp regExp = new RegExp(pattern);
 
@@ -38,8 +47,7 @@ class Validators {
     }
   });
 
-  final validatePassword = StreamTransformer<String, String>.fromHandlers(
-      handleData: (password, sink) {
+  final validatePassword = StreamTransformer<String, String>.fromHandlers(handleData: (password, sink) {
     if (password.length >= 6) {
       sink.add(password);
     } else {

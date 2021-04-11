@@ -1,7 +1,11 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/category_bloc.dart';
 import 'package:flutter_app_tenis/models/category_model.dart';
+import 'package:flutter_app_tenis/models/sponsor_model.dart';
+import 'package:flutter_app_tenis/pages/sponsors_page.dart';
 import 'package:flutter_app_tenis/pages/games_page.dart';
+import 'package:flutter_app_tenis/repositories/sponsor_repository.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/styles/svgIcons.dart';
@@ -16,6 +20,8 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   CategoryBloc categBloc = CategoryBloc();
+  SponsorRepository sponsorRepo = SponsorRepository();
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -25,33 +31,138 @@ class _CategoryPageState extends State<CategoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    categBloc.getSponsors(widget.idTournament);
     return Scaffold(
       appBar: AppBar(
         title: Text("Categorías", style: Theme.of(context).textTheme.subtitle2),
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Expanded(child: _drawContent()),
-            _drawFooter(),
-          ],
-        ),
+      body: Column(
+        children: [
+          _drawOptionSponsors(context),
+          Expanded(child: _drawContent()),
+          _drawFooter(),
+        ],
+      ),
+    );
+  }
+
+  Container _drawOptionSponsors(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: getProportionateScreenHeight(12.0)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgIconsApp.sponsor,
+          SizedBox(width: 8.0),
+          GestureDetector(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => SponsorsPage(
+                  idTournament: widget.idTournament,
+                ),
+              ),
+            ),
+            child: Text(
+              "Auspicios",
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    color: ColorsApp.orange,
+                    fontWeight: FontWeight.w700,
+                  ),
+            ),
+          )
+        ],
       ),
     );
   }
 
   Widget _drawFooter() {
+    return StreamBuilder<List<Sponsor>>(
+        stream: categBloc.sponsors,
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data.length > 0) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                _drawSlides(context, snapshot),
+                _drawCounterIndicator(snapshot),
+              ],
+            );
+          } else {
+            return Container();
+          }
+        });
+  }
+
+  Widget _drawCounterIndicator(AsyncSnapshot<List<Sponsor>> snapshot) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: map(snapshot.data, (index, url) {
+        return Container(
+          width: 10.0,
+          height: 10.0,
+          margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: currentIndex == index ? Colors.blueAccent : Colors.grey,
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _drawSlides(BuildContext context, AsyncSnapshot<List<Sponsor>> snapshot) {
     return Container(
-      color: ColorsApp.grey,
-      width: double.infinity,
-      height: SizeConfig.screenHeight * 0.25,
-      child: Container(
-        child: Text(
-          "Auspiciadores:",
-          style: Theme.of(context).textTheme.headline1.copyWith(color: ColorsApp.white),
-        ),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(color: Colors.grey, blurRadius: 10.0, spreadRadius: 3.0),
+        ],
+      ),
+      child: CarouselSlider(
+        options: _drawCarouselOptions(context),
+        items: snapshot.data.map((sponsor) {
+          return Builder(builder: (BuildContext context) {
+            return Container(
+                height: MediaQuery.of(context).size.height * 0.30,
+                width: MediaQuery.of(context).size.width,
+                child: Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.width * 0.40,
+                    child: FadeInImage(
+                        placeholder: AssetImage("assets/images/LoadingImg.gif"),
+                        fadeInDuration: Duration(milliseconds: 200),
+                        image: sponsor.urlImg == null
+                            ? AssetImage("assets/images/LoadingImg.gif")
+                            : NetworkImage(sponsor.urlImg),
+                        fit: BoxFit.cover)));
+          });
+        }).toList(),
       ),
     );
+  }
+
+  CarouselOptions _drawCarouselOptions(BuildContext context) {
+    return CarouselOptions(
+      height: MediaQuery.of(context).size.height * 0.18,
+      autoPlay: true,
+      autoPlayInterval: Duration(seconds: 3),
+      autoPlayAnimationDuration: Duration(milliseconds: 800),
+      autoPlayCurve: Curves.fastOutSlowIn,
+      pauseAutoPlayOnTouch: true,
+      aspectRatio: 2.0,
+      onPageChanged: (index, reason) {
+        setState(() {
+          currentIndex = index;
+        });
+      },
+    );
+  }
+
+  List<T> map<T>(List list, Function handler) {
+    List<T> result = [];
+    for (var i = 0; i < list.length; i++) {
+      result.add(handler(i, list[i]));
+    }
+    return result;
   }
 
   StreamBuilder<List<Category>> _drawContent() {
@@ -204,7 +315,6 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 
-// "category.numeroJugadoresGrupo.toString()"
   Widget _drawNumberPlayers(Category category) {
     return Container(
       child: Row(
@@ -237,7 +347,6 @@ class _CategoryPageState extends State<CategoryPage> {
 
   Widget _drawName(Category category) {
     return Container(
-      //se puso paddin porque no funciona el align de row
       child: Row(
         children: [
           SvgIconsApp.title,

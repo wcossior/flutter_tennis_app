@@ -135,6 +135,34 @@ class SvgIconsApp {
     color: ColorsApp.blueObscured,
   );
 
+  static var formAdd = SvgPicture.asset(
+    'assets/icons/Add.svg',
+    height: getProportionateScreenHeight(22.0),
+    width: getProportionateScreenWidth(22.0),
+    color: ColorsApp.white,
+  );
+
+  static var addImg = SvgPicture.asset(
+    'assets/icons/AddImg.svg',
+    height: getProportionateScreenHeight(22.0),
+    width: getProportionateScreenWidth(22.0),
+    color: ColorsApp.white,
+  );
+
+  static var delete = SvgPicture.asset(
+    'assets/icons/Trash.svg',
+    height: getProportionateScreenHeight(22.0),
+    width: getProportionateScreenWidth(22.0),
+    color: ColorsApp.orange,
+  );
+
+  static var sponsor = SvgPicture.asset(
+    'assets/icons/Sponsor.svg',
+    height: getProportionateScreenHeight(22.0),
+    width: getProportionateScreenWidth(22.0),
+    color: ColorsApp.blueObscured,
+  );
+
   static var type = Container(
     height: getProportionateScreenHeight(19.0),
     width: getProportionateScreenWidth(19.0),

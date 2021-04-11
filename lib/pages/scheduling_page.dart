@@ -17,7 +17,6 @@ class SchedulingPage extends StatefulWidget {
 
 class _SchedulingPageState extends State<SchedulingPage> {
   SchedulingBloc schedulingBloc = SchedulingBloc();
-  String currentTitle = "";
 
   @override
   void initState() {
@@ -127,15 +126,6 @@ class _SchedulingPageState extends State<SchedulingPage> {
         child: _drawInfoCard(event),
       ),
     );
-
-    // return Card(
-    //   margin: EdgeInsets.only(bottom: getProportionateScreenHeight(18.0)),
-    //   elevation: 4.0,
-    //   shape: RoundedRectangleBorder(
-    //     borderRadius: BorderRadius.circular(7.0),
-    //   ),
-    //   child: _drawInfoCard(event),
-    // );
   }
 
   Widget _drawInfoCard(Event event) {
@@ -152,7 +142,7 @@ class _SchedulingPageState extends State<SchedulingPage> {
 
   Widget _drawPlayers(Event event) {
     return Container(
-       padding: EdgeInsets.only(
+      padding: EdgeInsets.only(
         top: getProportionateScreenHeight(8.0),
         left: getProportionateScreenWidth(15.0),
         right: getProportionateScreenWidth(15.0),
