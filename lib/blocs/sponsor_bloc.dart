@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter_app_tenis/blocs/validators/validators.dart';
+import 'package:flutter_app_tenis/validators/validators.dart';
 import 'package:flutter_app_tenis/models/sponsor_model.dart';
 import 'package:flutter_app_tenis/repositories/sponsor_repository.dart';
 import 'package:rxdart/rxdart.dart';
@@ -41,6 +41,10 @@ class SponsorBloc extends Validators {
 
   Future getSponsors(String idTournament) async {
     await repository.getSponsors(idTournament);
+    changeSponsors(repository.list);
+  }
+
+  void getSponsorsDataUpdate(){
     changeSponsors(repository.list);
   }
 

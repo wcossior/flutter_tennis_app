@@ -21,7 +21,7 @@ class _SponsorsPageState extends State<SponsorsPage> {
 
   @override
   void initState() {
-    sponsorBloc.getSponsors(widget.idTournament);
+    sponsorBloc.getSponsorsDataUpdate();
     super.initState();
   }
 
@@ -184,7 +184,7 @@ class _SponsorsPageState extends State<SponsorsPage> {
           await sponsorBloc.deleteSponsor(sponsor.id, sponsor.urlImg);
           String text = sponsorBloc.mssgValue;
           var mssg = _showMessage(context, text);
-          await sponsorBloc.getSponsors(widget.idTournament);
+          sponsorBloc.getSponsors(widget.idTournament);
           await mssg.show();
         })
       ..show();

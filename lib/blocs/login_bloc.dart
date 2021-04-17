@@ -1,6 +1,6 @@
 import 'package:flutter_app_tenis/blocs/auth_bloc.dart';
 import 'package:flutter_app_tenis/repositories/auth_repository.dart';
-import 'package:flutter_app_tenis/blocs/validators/validators.dart';
+import 'package:flutter_app_tenis/validators/validators.dart';
 import 'package:rxdart/rxdart.dart';
 import 'dart:convert';
 

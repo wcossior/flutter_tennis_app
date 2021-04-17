@@ -26,6 +26,10 @@ class CategoryBloc {
     changeCategory(data);
   }
 
+  void getSponsorsDataUpdate(){
+    changeSponsors(sponRepo.list);
+  }
+
   void getSponsors(String idTournament) async{
     await sponRepo.getSponsors(idTournament);
     changeSponsors(sponRepo.list);
