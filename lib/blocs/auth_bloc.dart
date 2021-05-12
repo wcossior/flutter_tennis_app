@@ -6,19 +6,19 @@ class AuthBloc {
   String _tokenString;
   final prefs = new UserPreferences();
 
-  final PublishSubject _isSessionValid = PublishSubject<bool>(); //streamController
-  Observable<bool> get isSessionValid => _isSessionValid.stream; //strean
+  final PublishSubject _isSessionValidController = PublishSubject<bool>(); //streamController
+  Observable<bool> get streamIsSessionValid => _isSessionValidController.stream; //strean
 
   void dispose() {
-    _isSessionValid.close();
+    _isSessionValidController.close();
   }
 
   void restoreSession() async {
     _tokenString = await prefs.token;
     if (_tokenString != null && _tokenString.length > 0) {
-      _isSessionValid.sink.add(true);
+      _isSessionValidController.sink.add(true);
     } else {
-      _isSessionValid.sink.add(false);
+      _isSessionValidController.sink.add(false);
     }
   }
 
@@ -28,12 +28,12 @@ class AuthBloc {
     prefs.token = token;
     prefs.user = user;
     _tokenString = token;
-    _isSessionValid.sink.add(true);
+    _isSessionValidController.sink.add(true);
   }
 
   void closeSession() async {
     prefs.logout();
-    _isSessionValid.sink.add(false);
+    _isSessionValidController.sink.add(false);
   }
 }
 

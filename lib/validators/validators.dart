@@ -35,6 +35,17 @@ class Validators {
       sink.addError('Nombre incorrecto');
     }
   });
+  
+  final validateScore = StreamTransformer<String, String>.fromHandlers(handleData: (score1, sink) {
+    Pattern pattern = r'^[0-9]*$';
+    RegExp regExp = new RegExp(pattern);
+
+    if (score1.length>0 && regExp.hasMatch(score1)) {
+      sink.add(score1);
+    } else {
+      sink.addError('Score invalido');
+    }
+  });
 
   final validateCi = StreamTransformer<String, String>.fromHandlers(handleData: (ci, sink) {
     Pattern pattern = r'^[0-9]*$';

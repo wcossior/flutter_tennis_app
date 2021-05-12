@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/login_bloc.dart';
 import 'package:flutter_app_tenis/pages/signup_page.dart';
@@ -6,7 +7,7 @@ import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/styles/svgIcons.dart';
 import 'package:flutter_app_tenis/utils/keyboard.dart';
 import 'package:flutter_app_tenis/widgets/customButton.dart';
-import 'package:flutter_app_tenis/widgets/custom_surfix_icon.dart';
+import 'package:flutter_app_tenis/widgets/customSurfixIcon.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -98,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _loadingIndicator(LoginBloc bloc) {
     return StreamBuilder<bool>(
-      stream: bloc.loading,
+      stream: bloc.streamLoading,
       builder: (context, snap) {
         return Container(
           child: Center(
@@ -121,12 +122,12 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _drawFieldEmail(LoginBloc bloc) {
     return StreamBuilder<Object>(
-      stream: bloc.email,
+      stream: bloc.streamEmail,
       builder: (context, snapshot) {
         return Container(
           child: TextField(
             keyboardType: TextInputType.emailAddress,
-            onChanged: bloc.changeEmail,
+            onChanged: bloc.sinkEmail,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
@@ -142,12 +143,12 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _drawFieldPassword(LoginBloc bloc) {
     return StreamBuilder<Object>(
-      stream: bloc.password,
+      stream: bloc.streamPassword,
       builder: (context, snapshot) {
         return Container(
           child: TextField(
             obscureText: true,
-            onChanged: bloc.changePassword,
+            onChanged: bloc.sinkPassword,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
@@ -163,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _drawButtonLogin(LoginBloc bloc) {
     return StreamBuilder<Object>(
-      stream: bloc.submitValid,
+      stream: bloc.streamSubmitValid,
       builder: (context, snapshot) {
         return CustomButton(
           child: Text(
@@ -176,11 +177,29 @@ class _LoginPageState extends State<LoginPage> {
                   ? () async {
                       setState(() => firstClick = true);
                       KeyboardUtil.hideKeyboard(context);
-                      await bloc.submit();
+                      String text = await bloc.submit();
+                      if (text != "Inicio exitoso") {
+                        var message = _showMessage(context, text);
+                        await message.show();
+                      }
                     }
                   : null,
         );
       },
+    );
+  }
+
+  AwesomeDialog _showMessage(BuildContext context, String mssg) {
+    setState(() {
+      firstClick = false;
+    });
+    return AwesomeDialog(
+      context: context,
+      dialogType: mssg.contains("error") ? DialogType.ERROR : DialogType.WARNING,
+      animType: AnimType.SCALE,
+      title: mssg,
+      desc: "",
+      autoHide: Duration(seconds: 4),
     );
   }
 }

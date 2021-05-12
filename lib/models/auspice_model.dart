@@ -1,25 +1,25 @@
 
 
-class Sponsors {
-  List<Sponsor> items =[];
-  Sponsors();
-  Sponsors.fromJsonList(List<dynamic> list) {
+class Auspices {
+  List<Auspice> items =[];
+  Auspices();
+  Auspices.fromJsonList(List<dynamic> list) {
     if (list == null) return;
     for (var item in list) {
-      final sponsor = new Sponsor.fromJsonMap(item);
-      items.add(sponsor);
+      final auspice = new Auspice.fromJsonMap(item);
+      items.add(auspice);
     }
   }
 }
 
-class Sponsor {
+class Auspice {
   String auspiciante;
   int idTorneo;
   String nombreImg;
   String urlImg;
   String id;
 
-  Sponsor({
+  Auspice({
     this.auspiciante,
     this.idTorneo,
     this.nombreImg,
@@ -27,7 +27,7 @@ class Sponsor {
     this.id,
   });
 
-  Sponsor.fromJsonMap(dynamic item) {
+  Auspice.fromJsonMap(dynamic item) {
     auspiciante = item["auspiciante"];
     idTorneo = item["id_torneo"];
     nombreImg = item["nombre_img"];

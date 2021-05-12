@@ -9,41 +9,41 @@ class LoginBloc extends Validators {
 
   final BehaviorSubject _emailController = BehaviorSubject<String>();
   final BehaviorSubject _passwordController = BehaviorSubject<String>();
-  final PublishSubject _loadingData = PublishSubject<bool>();
+  final PublishSubject _loadingContoller = PublishSubject<bool>();
 
-  Function(String) get changeEmail => _emailController.sink.add;
-  Function(String) get changePassword => _passwordController.sink.add;
+  Function(String) get sinkEmail => _emailController.sink.add;
+  Function(String) get sinkPassword => _passwordController.sink.add;
 
-  Stream<String> get email => _emailController.stream.transform(validateEmail);
-  Stream<String> get password => _passwordController.stream.transform(validatePassword);
-  Stream<bool> get submitValid => Observable.combineLatest2(email, password, (email, password) => true);
-  Observable<bool> get loading => _loadingData.stream;
+  Stream<String> get streamEmail => _emailController.stream.transform(validateEmail);
+  Stream<String> get streamPassword => _passwordController.stream.transform(validatePassword);
+  Stream<bool> get streamSubmitValid =>
+      Observable.combineLatest2(streamEmail, streamPassword, (email, password) => true);
+  Observable<bool> get streamLoading => _loadingContoller.stream;
+
+  void dispose() {
+    _emailController.close();
+    _passwordController.close();
+    _loadingContoller.close();
+  }
 
   Future<String> submit() {
     final validEmail = _emailController.value;
     final validPassword = _passwordController.value;
-    _loadingData.sink.add(true);
+    _loadingContoller.sink.add(true);
     return login(validEmail, validPassword);
   }
 
   Future<String> login(String email, String password) async {
     String resp = await repository.login(email, password);
     Map decodeData = json.decode(resp);
+    _loadingContoller.sink.add(false);
     if (decodeData.containsKey("msg")) {
-      _loadingData.sink.add(false);
       String errorMessage = decodeData["msg"];
       return errorMessage;
     } else {
-      _loadingData.sink.add(false);
       authBloc.openSession(decodeData);
-      String successfulMessage = "Inicio de sesión exitoso";
+      String successfulMessage = "Inicio exitoso";
       return successfulMessage;
     }
-  }
-
-  void dispose() {
-    _emailController.close();
-    _passwordController.close();
-    _loadingData.close();
   }
 }

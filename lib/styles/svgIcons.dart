@@ -41,6 +41,12 @@ class SvgIconsApp {
     width: getProportionateScreenWidth(30.0),
     height: getProportionateScreenHeight(30.0),
   );
+  static var clock = SvgPicture.asset(
+    'assets/icons/Clock.svg',
+    width: getProportionateScreenWidth(14.0),
+    height: getProportionateScreenHeight(14.0),
+    color: ColorsApp.white,
+  );
 
   static var winner = ClipRRect(
     borderRadius: BorderRadius.only(topLeft: Radius.circular(7.0), bottomRight: Radius.circular(7.0)),
@@ -134,6 +140,19 @@ class SvgIconsApp {
     width: getProportionateScreenWidth(22.0),
     color: ColorsApp.blueObscured,
   );
+  static var edit = SvgPicture.asset(
+    'assets/icons/Edit.svg',
+    height: getProportionateScreenHeight(20.0),
+    width: getProportionateScreenWidth(20.0),
+    color: ColorsApp.blueObscured,
+  );
+
+  static var end = SvgPicture.asset(
+    'assets/icons/End.svg',
+    height: getProportionateScreenHeight(20.0),
+    width: getProportionateScreenWidth(20.0),
+    color: ColorsApp.white,
+  );
 
   static var formAdd = SvgPicture.asset(
     'assets/icons/Add.svg',
@@ -154,6 +173,12 @@ class SvgIconsApp {
     height: getProportionateScreenHeight(22.0),
     width: getProportionateScreenWidth(22.0),
     color: ColorsApp.orange,
+  );
+  static var trash = SvgPicture.asset(
+    'assets/icons/Trash.svg',
+    height: getProportionateScreenHeight(18.0),
+    width: getProportionateScreenWidth(18.0),
+    color: ColorsApp.blueObscured,
   );
 
   static var sponsor = SvgPicture.asset(
@@ -198,6 +223,7 @@ class SvgIconsApp {
       color: ColorsApp.blueObscured,
     ),
   );
+ 
 
   static var playoffs = Container(
     height: getProportionateScreenHeight(25.0),

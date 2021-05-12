@@ -5,19 +5,21 @@ import 'package:rxdart/rxdart.dart';
 class SchedulingBloc {
   SchedulingRepository repository = SchedulingRepository();
   List<Event> schedulingAllEvents = [];
+  List<String> hours = [];
 
-  final BehaviorSubject<List<Event>> _scheduling = BehaviorSubject<List<Event>>();
-  Observable<List<Event>> get scheduling => _scheduling.stream;
-  Function(List<Event>) get changeScheduling => _scheduling.sink.add;
+  final BehaviorSubject<List<Event>> _schedulingController = BehaviorSubject<List<Event>>();
+  Observable<List<Event>> get streamScheduling => _schedulingController.stream;
+  Function(List<Event>) get sinkScheduling => _schedulingController.sink.add;
 
   void dispose() {
-    _scheduling.close();
+    _schedulingController.close();
   }
 
   void getScheduling(String idTournament) async {
     List<Event> data = await repository.getScheduling(idTournament);
-    changeScheduling(data);
+    sinkScheduling(data);
     schedulingAllEvents = data;
+    getHoursTitle();
   }
 
   void filterEvents(String text) {
@@ -29,9 +31,17 @@ class SchedulingBloc {
 
         return eventPlayer1.contains(text) || eventPlayer2.contains(text);
       }).toList();
-      changeScheduling(dataGamesForDisplay);
+      sinkScheduling(dataGamesForDisplay);
     } else {
-      changeScheduling(schedulingAllEvents);
+      sinkScheduling(schedulingAllEvents);
+    }
+  }
+
+  void getHoursTitle(){ 
+    for (var event in schedulingAllEvents) {
+      if(!hours.contains(event.hora)){
+        hours.add(event.hora);
+      }
     }
   }
 }

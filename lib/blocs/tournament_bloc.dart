@@ -5,16 +5,16 @@ import 'package:rxdart/rxdart.dart';
 class TournamentBloc {
   TournamentRepository repository = TournamentRepository();
 
-  final BehaviorSubject<List<Tournament>> _tournament = BehaviorSubject<List<Tournament>>();
-  Observable<List<Tournament>> get tournament => _tournament.stream;
-  Function(List<Tournament>) get changeTournament => _tournament.sink.add;
+  final BehaviorSubject<List<Tournament>> _tournamentController = BehaviorSubject<List<Tournament>>();
+  Observable<List<Tournament>> get streamTournament => _tournamentController.stream;
+  Function(List<Tournament>) get sinkTournament => _tournamentController.sink.add;
 
   void dispose() {
-    _tournament.close();
+    _tournamentController.close();
   }
 
   void getTournament() async {
     List<Tournament> data = await repository.getTournament();
-    changeTournament(data);
+    sinkTournament(data);
   }
 }

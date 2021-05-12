@@ -12,7 +12,6 @@ class AuthProvider {
     final url = Uri.https(_url, "/login");
 
     final resp = await http.post(url, body: authData);
-
     return resp.body;
   }
 }

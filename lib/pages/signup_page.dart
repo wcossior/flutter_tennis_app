@@ -5,7 +5,7 @@ import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/utils/keyboard.dart';
 import 'package:flutter_app_tenis/widgets/customButton.dart';
-import 'package:flutter_app_tenis/widgets/custom_surfix_icon.dart';
+import 'package:flutter_app_tenis/widgets/customSurfixIcon.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key}) : super(key: key);
@@ -73,7 +73,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _loadingIndicator(SignUpBloc bloc) {
     return StreamBuilder<bool>(
-      stream: bloc.loading,
+      stream: bloc.streamLoading,
       builder: (context, snap) {
         return Container(
           child: Center(
@@ -125,12 +125,12 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _drawFieldEmail(SignUpBloc bloc) {
     return StreamBuilder(
-      stream: bloc.email,
+      stream: bloc.streamEmail,
       builder: (context, snapshot) {
         return Container(
           child: TextField(
             keyboardType: TextInputType.emailAddress,
-            onChanged: bloc.changeEmail,
+            onChanged: bloc.sinkEmail,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
@@ -146,12 +146,12 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _drawFieldCi(SignUpBloc bloc) {
     return StreamBuilder(
-      stream: bloc.ci,
+      stream: bloc.streamCi,
       builder: (context, snapshot) {
         return Container(
           child: TextField(
             keyboardType: TextInputType.number,
-            onChanged: bloc.changeCi,
+            onChanged: bloc.sinkCi,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/IdCard.svg"),
@@ -167,12 +167,12 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _drawFieldNombre(SignUpBloc bloc) {
     return StreamBuilder(
-      stream: bloc.nombre,
+      stream: bloc.streamNombre,
       builder: (context, snapshot) {
         return Container(
           child: TextField(
             keyboardType: TextInputType.name,
-            onChanged: bloc.changeNombre,
+            onChanged: bloc.sinkNombre,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/User.svg"),
@@ -188,12 +188,12 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _drawFieldPassword(SignUpBloc bloc) {
     return StreamBuilder(
-      stream: bloc.password,
+      stream: bloc.streamPassword,
       builder: (context, snapshot) {
         return Container(
           child: TextField(
             obscureText: true,
-            onChanged: bloc.changePassword,
+            onChanged: bloc.sinkPassword,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
@@ -209,7 +209,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _drawButtonSignUp(SignUpBloc bloc) {
     return StreamBuilder(
-      stream: bloc.submitValid,
+      stream: bloc.streamSubmitValid,
       builder: (context, snapshot) {
         return CustomButton(
           child: Text(

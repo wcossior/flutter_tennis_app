@@ -18,12 +18,13 @@ dependencies:
   curved_navigation_bar: ^0.3.7
   intl: ^0.17.0
   sticky_headers: "^0.1.8"
-  firebase_core: ^0.4.0+9
-  firebase_analytics: ^5.0.2
-  cloud_firestore: ^0.12.9+5
-  firebase_storage: ^3.0.3
+  firebase_core: 
+  firebase_analytics: 
+  cloud_firestore: 
+  firebase_storage: 
   image_picker: ^0.7.4
   carousel_slider: ^3.0.0
+  firebase_messaging: 
   
 dev_dependencies:
   flutter_test:

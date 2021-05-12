@@ -1,27 +1,27 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_tenis/blocs/sponsor_bloc.dart';
-import 'package:flutter_app_tenis/models/sponsor_model.dart';
+import 'package:flutter_app_tenis/blocs/auspice_bloc.dart';
+import 'package:flutter_app_tenis/models/auspice_model.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/styles/svgIcons.dart';
 import 'package:flutter_app_tenis/pages/formAddSponsor_page.dart';
 
-class SponsorsPage extends StatefulWidget {
+class AuspicePage extends StatefulWidget {
   final String idTournament;
 
-  SponsorsPage({Key key, this.idTournament}) : super(key: key);
+  AuspicePage({Key key, this.idTournament}) : super(key: key);
 
   @override
-  _SponsorsPageState createState() => _SponsorsPageState();
+  _AuspicePageState createState() => _AuspicePageState();
 }
 
-class _SponsorsPageState extends State<SponsorsPage> {
-  SponsorBloc sponsorBloc = SponsorBloc();
+class _AuspicePageState extends State<AuspicePage> {
+  AuspiceBloc auspiceBloc = AuspiceBloc();
 
   @override
   void initState() {
-    sponsorBloc.getSponsorsDataUpdate();
+    auspiceBloc.getAuspicesDataUpdate();
     super.initState();
   }
 
@@ -34,7 +34,7 @@ class _SponsorsPageState extends State<SponsorsPage> {
       body: Stack(
         children: [
           _drawContent(),
-          _loadingIndicator(sponsorBloc),
+          _loadingIndicator(auspiceBloc),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -48,14 +48,14 @@ class _SponsorsPageState extends State<SponsorsPage> {
                     ),
                   ),
                 )
-                .then((value) => sponsorBloc.getSponsors(widget.idTournament));
+                .then((value) => auspiceBloc.getAuspices(widget.idTournament));
           }),
     );
   }
 
-  Widget _loadingIndicator(SponsorBloc bloc) {
+  Widget _loadingIndicator(AuspiceBloc bloc) {
     return StreamBuilder<bool>(
-      stream: bloc.loading,
+      stream: bloc.streamLoading,
       builder: (context, snap) {
         return Container(
           child: Center(
@@ -68,7 +68,7 @@ class _SponsorsPageState extends State<SponsorsPage> {
 
   Widget _drawContent() {
     return StreamBuilder(
-      stream: sponsorBloc.sponsors,
+      stream: auspiceBloc.streamAuspice,
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data.isNotEmpty) {
           return _drawSponsors(snapshot.data);
@@ -82,7 +82,7 @@ class _SponsorsPageState extends State<SponsorsPage> {
     );
   }
 
-  Widget _drawSponsors(List<Sponsor> data) {
+  Widget _drawSponsors(List<Auspice> data) {
     return ListView.builder(
       padding: EdgeInsets.only(
         left: SizeConfig.screenWidth * 0.055,
@@ -96,7 +96,7 @@ class _SponsorsPageState extends State<SponsorsPage> {
     );
   }
 
-  Widget _getSponsors(Sponsor sponsor) {
+  Widget _getSponsors(Auspice sponsor) {
     return Card(
       margin: EdgeInsets.only(bottom: getProportionateScreenHeight(18.0)),
       elevation: 6.0,
@@ -107,7 +107,7 @@ class _SponsorsPageState extends State<SponsorsPage> {
     );
   }
 
-  Widget _drawInfoCard(Sponsor sponsor) {
+  Widget _drawInfoCard(Auspice sponsor) {
     return Column(
       children: [
         Stack(
@@ -128,7 +128,7 @@ class _SponsorsPageState extends State<SponsorsPage> {
     );
   }
 
-  Widget _drawImg(Sponsor sponsor) {
+  Widget _drawImg(Auspice sponsor) {
     return ClipRRect(
       borderRadius: BorderRadius.vertical(top: Radius.circular(7.0)),
       child: FadeInImage(
@@ -142,7 +142,7 @@ class _SponsorsPageState extends State<SponsorsPage> {
     );
   }
 
-  Widget _drawButtonDelete(Sponsor sponsor) {
+  Widget _drawButtonDelete(Auspice sponsor) {
     return ClipRRect(
       borderRadius: BorderRadius.only(
         bottomLeft: Radius.circular(100.0),
@@ -165,7 +165,7 @@ class _SponsorsPageState extends State<SponsorsPage> {
     );
   }
 
-  void _areYouSureToDelete(Sponsor sponsor) {
+  void _areYouSureToDelete(Auspice sponsor) {
     AwesomeDialog(
         context: context,
         dialogType: DialogType.WARNING,
@@ -181,10 +181,10 @@ class _SponsorsPageState extends State<SponsorsPage> {
         btnCancelColor: ColorsApp.green,
         btnCancelOnPress: () {},
         btnOkOnPress: () async {
-          await sponsorBloc.deleteSponsor(sponsor.id, sponsor.urlImg);
-          String text = sponsorBloc.mssgValue;
+          await auspiceBloc.deleteAuspice(sponsor.id, sponsor.urlImg);
+          String text = auspiceBloc.valueMessage;
           var mssg = _showMessage(context, text);
-          sponsorBloc.getSponsors(widget.idTournament);
+          auspiceBloc.getAuspices(widget.idTournament);
           await mssg.show();
         })
       ..show();

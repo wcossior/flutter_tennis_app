@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:path/path.dart' as Path;
-import 'package:flutter_app_tenis/models/sponsor_model.dart';
+import 'package:flutter_app_tenis/models/auspice_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-class SponsorProvider {
+class AuspiceProvider {
   final databaseReference = Firestore.instance;
 
-  Future<List<Sponsor>> getSponsors(String idTournament) async {
+  Future<List<Auspice>> getAuspices(String idTournament) async {
     try {
       var data = (await databaseReference
               .collection("sponsors")
@@ -15,7 +15,7 @@ class SponsorProvider {
               .getDocuments())
           .documents
           .toList();
-      final auspices = new Sponsors.fromJsonList(data);
+      final auspices = new Auspices.fromJsonList(data);
       return auspices.items;
     } catch (e) {
       print(e);
@@ -23,7 +23,7 @@ class SponsorProvider {
     }
   }
 
-  Future<String> addSponsor(Sponsor sponsor, File img) async {
+  Future<String> addAuspice(Auspice auspice, File img) async {
     try {
       StorageReference storageReference =
           FirebaseStorage.instance.ref().child('auspicios/${Path.basename(img.path)}');
@@ -32,20 +32,20 @@ class SponsorProvider {
       String uploadedFileURL = url.toString();
 
       await databaseReference.collection("sponsors").add({
-        'auspiciante': sponsor.auspiciante,
+        'auspiciante': auspice.auspiciante,
         'nombre_img': img.toString(),
         'url_img': uploadedFileURL,
-        'id_torneo': sponsor.idTorneo
+        'id_torneo': auspice.idTorneo
       });
 
-      return "Auspcio Agregado";
+      return "Auspcio agregado";
     } catch (e) {
       print(e);
       return "Ocurrio un error";
     }
   }
 
-  Future<String> deleteSponsor(String idSponsor, String urlImg) async {
+  Future<String> deleteAuspice(String idAuspice, String urlImg) async {
     try {
       FirebaseStorage.instance.getReferenceFromUrl(urlImg).then((res) {
         res.delete().then((res) {
@@ -53,8 +53,8 @@ class SponsorProvider {
         });
       });
 
-      await databaseReference.collection('sponsors').document(idSponsor).delete();
-      return "Auspicio Eliminado";
+      await databaseReference.collection('sponsors').document(idAuspice).delete();
+      return "Auspicio eliminado";
     } catch (e) {
       print(e);
       return "Ocurrio un error";

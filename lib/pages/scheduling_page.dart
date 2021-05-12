@@ -4,8 +4,8 @@ import 'package:flutter_app_tenis/models/scheduling_model.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/styles/svgIcons.dart';
-import 'package:flutter_app_tenis/widgets/custom_surfix_icon.dart';
-import 'package:sticky_headers/sticky_headers.dart';
+import 'package:flutter_app_tenis/widgets/customSurfixIcon.dart';
+import 'package:flutter_app_tenis/widgets/schedulingCard.dart';
 
 class SchedulingPage extends StatefulWidget {
   final String idTournament;
@@ -31,14 +31,14 @@ class _SchedulingPageState extends State<SchedulingPage> {
         title: Text("Programación", style: Theme.of(context).textTheme.subtitle2),
       ),
       body: Stack(
-        children: [_drawContent(), _drawNoResults()],
+        children: [_drawContent(), _drawNoSearchResults()],
       ),
     );
   }
 
-  Widget _drawNoResults() {
+  Widget _drawNoSearchResults() {
     return StreamBuilder(
-      stream: schedulingBloc.scheduling,
+      stream: schedulingBloc.streamScheduling,
       builder: (context, snapshot) {
         if (schedulingBloc.schedulingAllEvents.isNotEmpty && snapshot.data.isEmpty) {
           return Center(child: Text("Sin resultados"));
@@ -52,7 +52,7 @@ class _SchedulingPageState extends State<SchedulingPage> {
   Widget _searchBar() {
     return schedulingBloc.schedulingAllEvents.isNotEmpty
         ? StreamBuilder(
-            stream: schedulingBloc.scheduling,
+            stream: schedulingBloc.streamScheduling,
             builder: (context, snapshot) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -62,7 +62,7 @@ class _SchedulingPageState extends State<SchedulingPage> {
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Search.svg"),
                     labelText: "Buscador",
-                    hintText: 'Ingrese el nombre del jugador',
+                    hintText: 'Nombre del jugador',
                   ),
                   onChanged: (text) {
                     schedulingBloc.filterEvents(text);
@@ -76,7 +76,7 @@ class _SchedulingPageState extends State<SchedulingPage> {
 
   Widget _drawContent() {
     return StreamBuilder(
-      stream: schedulingBloc.scheduling,
+      stream: schedulingBloc.streamScheduling,
       builder: (context, snapshot) {
         if (snapshot.data == null) {
           return Center(child: CircularProgressIndicator());
@@ -89,7 +89,7 @@ class _SchedulingPageState extends State<SchedulingPage> {
 
   Widget _drawEvents(List<Event> data) {
     return data.isEmpty && schedulingBloc.schedulingAllEvents.isEmpty
-        ? Center(child: Text("No hay partidos"))
+        ? Center(child: Text("No hay programación"))
         : ListView.builder(
             padding: EdgeInsets.only(
               left: SizeConfig.screenWidth * 0.055,
@@ -97,115 +97,40 @@ class _SchedulingPageState extends State<SchedulingPage> {
               top: SizeConfig.screenHeight * 0.025,
             ),
             itemBuilder: (ctx, index) {
-              return index == 0 ? _searchBar() : _getEvents(data[index - 1]);
+              return index == 0 ? _searchBar() : _drawCard(data[index - 1]);
             },
             itemCount: data.length + 1,
           );
   }
 
-  Widget _getEvents(Event event) {
-    return StickyHeader(
-      header: Container(
-        height: 50.0,
+  Widget _drawCard(Event event) {
+    return Column(
+      children: [_drawHour(event), SchedulingCard(event: event)],
+    );
+  }
+
+  Widget _drawHour(Event event) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(7.0),
+          topRight: Radius.circular(7.0),
+        ),
         color: ColorsApp.blueObscured,
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        alignment: Alignment.center,
-        child: Center(
-          child: Text(
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgIconsApp.clock,
+          SizedBox(width: 6.0),
+          Text(
             '${event.hora}',
             style: Theme.of(context).textTheme.subtitle2,
           ),
-        ),
-      ),
-      content: Card(
-        margin: EdgeInsets.only(bottom: getProportionateScreenHeight(18.0)),
-        elevation: 4.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(7.0),
-        ),
-        child: _drawInfoCard(event),
-      ),
-    );
-  }
-
-  Widget _drawInfoCard(Event event) {
-    return Column(
-      children: [
-        _drawHeaderCard(event),
-        Divider(thickness: 1.2, color: ColorsApp.greyObscured),
-        SizedBox(height: getProportionateScreenHeight(8.0)),
-        _drawPlayers(event),
-        SizedBox(height: getProportionateScreenHeight(8.0)),
-      ],
-    );
-  }
-
-  Widget _drawPlayers(Event event) {
-    return Container(
-      padding: EdgeInsets.only(
-        top: getProportionateScreenHeight(8.0),
-        left: getProportionateScreenWidth(15.0),
-        right: getProportionateScreenWidth(15.0),
-        bottom: getProportionateScreenWidth(12.0),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            children: [
-              SvgIconsApp.avatarPlayer,
-              SizedBox(height: 6.0),
-              Text(
-                _getNamePlayer(event.jugador1),
-                style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
-          SvgIconsApp.rackets,
-          Column(
-            children: [
-              SvgIconsApp.avatarPlayer,
-              SizedBox(height: 6.0),
-              Text(
-                _getNamePlayer(event.jugador2),
-                style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
         ],
       ),
     );
-  }
-
-  Widget _drawHeaderCard(Event event) {
-    return Container(
-      padding: EdgeInsets.only(
-        top: getProportionateScreenHeight(12.0),
-        left: getProportionateScreenWidth(15.0),
-        right: getProportionateScreenWidth(15.0),
-        bottom: getProportionateScreenWidth(8.0),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            event.categoria,
-            style: Theme.of(context).textTheme.bodyText1,
-          ),
-          Text(
-            "Cancha " + event.cancha,
-            style: Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _getNamePlayer(String name) {
-    if (name.length > 16) {
-      return name.substring(0, 17) + "...";
-    } else {
-      return name;
-    }
   }
 }

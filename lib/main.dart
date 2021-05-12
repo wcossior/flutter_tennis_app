@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
 
   Widget _drawPage() {
     return StreamBuilder<bool>(
-      stream: authBloc.isSessionValid,
+      stream: authBloc.streamIsSessionValid,
       builder: (context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.hasData && snapshot.data) {
           return HomePage();

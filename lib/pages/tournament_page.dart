@@ -33,7 +33,7 @@ class _TournamentPageState extends State<TournamentPage> with AutomaticKeepAlive
 
   StreamBuilder<List<Tournament>> _drawContent() {
     return StreamBuilder(
-      stream: tournBloc.tournament,
+      stream: tournBloc.streamTournament,
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data.isNotEmpty) {
           return _drawListTournament(snapshot.data);

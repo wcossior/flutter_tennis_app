@@ -110,11 +110,13 @@ class _HomePageState extends State<HomePage> {
         children: [
           SvgIconsApp.avatarPlayer,
           SizedBox(width: 10.0),
-          Text(
-            prefs.user["nombre"].substring(0, 12) + "...",
-            style: Theme.of(context).textTheme.bodyText2.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+          Expanded(
+            child: Text(
+              prefs.user["nombre"],
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+            ),
           ),
         ],
       ),

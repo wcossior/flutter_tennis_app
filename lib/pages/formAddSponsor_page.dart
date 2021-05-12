@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_tenis/blocs/sponsor_bloc.dart';
+import 'package:flutter_app_tenis/blocs/auspice_bloc.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/styles/svgIcons.dart';
 import 'package:flutter_app_tenis/utils/keyboard.dart';
 import 'package:flutter_app_tenis/widgets/customButton.dart';
-import 'package:flutter_app_tenis/widgets/custom_surfix_icon.dart';
+import 'package:flutter_app_tenis/widgets/customSurfixIcon.dart';
 import 'package:image_picker/image_picker.dart';
 
 class FormAddSponsorPage extends StatefulWidget {
@@ -21,7 +21,7 @@ class FormAddSponsorPage extends StatefulWidget {
 }
 
 class _FormAddSponsorPageState extends State<FormAddSponsorPage> {
-  SponsorBloc sponsorBloc = SponsorBloc();
+  AuspiceBloc sponsorBloc = AuspiceBloc();
   bool firstClick = false;
 
   @override
@@ -73,14 +73,14 @@ class _FormAddSponsorPageState extends State<FormAddSponsorPage> {
     );
   }
 
-  Widget _drawFieldTitle(SponsorBloc bloc) {
+  Widget _drawFieldTitle(AuspiceBloc bloc) {
     return StreamBuilder<Object>(
-      stream: bloc.title,
+      stream: bloc.streamTitle,
       builder: (context, snapshot) {
         return Container(
           child: TextField(
             keyboardType: TextInputType.emailAddress,
-            onChanged: bloc.changeTitle,
+            onChanged: bloc.sinkTitle,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Title.svg"),
@@ -94,9 +94,9 @@ class _FormAddSponsorPageState extends State<FormAddSponsorPage> {
     );
   }
 
-  Widget _drawFieldImage(SponsorBloc bloc) {
+  Widget _drawFieldImage(AuspiceBloc bloc) {
     return StreamBuilder(
-      stream: bloc.image,
+      stream: bloc.streamImage,
       builder: (context, snapshot) {
         File img = snapshot.data;
 
@@ -114,9 +114,9 @@ class _FormAddSponsorPageState extends State<FormAddSponsorPage> {
     );
   }
 
-  Widget _drawButtonSave(SponsorBloc bloc) {
+  Widget _drawButtonSave(AuspiceBloc bloc) {
     return StreamBuilder<Object>(
-      stream: bloc.submitValid,
+      stream: bloc.streamSubmitValid,
       builder: (context, snapshot) {
         return CustomButton(
           child: Text(
@@ -129,11 +129,10 @@ class _FormAddSponsorPageState extends State<FormAddSponsorPage> {
                   ? () async {
                       setState(() => firstClick = true);
                       KeyboardUtil.hideKeyboard(context);
-                      await bloc.addSponsor(int.parse(widget.idTournament));
-                      String text = bloc.mssgValue;
+                      await bloc.addAuspice(int.parse(widget.idTournament));
+                      String text = bloc.valueMessage;
                       var mssg = _showMessage(context, text);
                       await mssg.show();
-                      await sponsorBloc.getSponsors(widget.idTournament);
                       Navigator.pop(context);
                     }
                   : null,
@@ -207,12 +206,12 @@ class _FormAddSponsorPageState extends State<FormAddSponsorPage> {
   void _chooseFile() async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    if (pickedFile != null) sponsorBloc.changeImg(File(pickedFile.path));
+    if (pickedFile != null) sponsorBloc.sinkImg(File(pickedFile.path));
   }
 
-  Widget _loadingIndicator(SponsorBloc bloc) {
+  Widget _loadingIndicator(AuspiceBloc bloc) {
     return StreamBuilder<bool>(
-      stream: bloc.loading,
+      stream: bloc.streamLoading,
       builder: (context, snap) {
         return Container(
           child: Center(

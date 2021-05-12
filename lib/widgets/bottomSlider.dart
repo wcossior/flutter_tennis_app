@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter_app_tenis/models/sponsor_model.dart';
+import 'package:flutter_app_tenis/models/auspice_model.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 
 class BottomSlider extends StatefulWidget {
-  final List<Sponsor> sponsors;
+  final List<Auspice> sponsors;
   const BottomSlider({Key key, this.sponsors}) : super(key: key);
 
   @override

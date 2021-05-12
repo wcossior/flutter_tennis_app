@@ -5,8 +5,7 @@ import 'package:flutter_app_tenis/pages/detailGame_page.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/styles/svgIcons.dart';
-import 'package:flutter_app_tenis/utils/keyboard.dart';
-import 'package:flutter_app_tenis/widgets/custom_surfix_icon.dart';
+import 'package:flutter_app_tenis/widgets/customSurfixIcon.dart';
 
 class GamesPage extends StatefulWidget {
   final String idCategory;
@@ -40,7 +39,7 @@ class _GamesPageState extends State<GamesPage> {
 
   Widget _drawNoResults() {
     return StreamBuilder(
-      stream: gameBloc.games,
+      stream: gameBloc.streamGame,
       builder: (context, snapshot) {
         if (gameBloc.allGames.isNotEmpty && snapshot.data.isEmpty) {
           return Center(child: Text("Sin resultados"));
@@ -54,7 +53,7 @@ class _GamesPageState extends State<GamesPage> {
   Widget _searchBar() {
     return gameBloc.allGames.isNotEmpty
         ? StreamBuilder(
-            stream: gameBloc.games,
+            stream: gameBloc.streamGame,
             builder: (context, snapshot) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -78,7 +77,7 @@ class _GamesPageState extends State<GamesPage> {
 
   Widget _drawContent() {
     return StreamBuilder(
-      stream: gameBloc.games,
+      stream: gameBloc.streamGame,
       builder: (context, snapshot) {
         if (snapshot.data == null) {
           return Center(child: CircularProgressIndicator());
@@ -147,14 +146,15 @@ class _GamesPageState extends State<GamesPage> {
           SizedBox(width: 8.0),
           GestureDetector(
             onTap: () {
-              KeyboardUtil.hideKeyboard(context);
-              return Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => DetailGamePage(
-                    game: game,
-                  ),
-                ),
-              );
+              return Navigator.of(context)
+                  .push(
+                    MaterialPageRoute(
+                      builder: (context) => DetailGamePage(
+                        game: game,
+                      ),
+                    ),
+                  )
+                  .then((value) => gameBloc.getGames(widget.idCategory, widget.typeInfo));
             },
             child: Text(
               "Ver detalles",

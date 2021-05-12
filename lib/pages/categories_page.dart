@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/category_bloc.dart';
 import 'package:flutter_app_tenis/models/category_model.dart';
-import 'package:flutter_app_tenis/models/sponsor_model.dart';
+import 'package:flutter_app_tenis/models/auspice_model.dart';
+import 'package:flutter_app_tenis/preferences/userPreferences.dart';
 import 'package:flutter_app_tenis/widgets/bottomSlider.dart';
 import 'package:flutter_app_tenis/widgets/categoryCard.dart';
 import 'package:flutter_app_tenis/pages/sponsors_page.dart';
@@ -20,11 +21,12 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   CategoryBloc categBloc = CategoryBloc();
   int currentIndex = 0;
+  final prefs = new UserPreferences();
 
   @override
   void initState() {
     categBloc.getCategories(widget.idTournament);
-    categBloc.getSponsors(widget.idTournament);
+    categBloc.getAuspices(widget.idTournament);
     super.initState();
   }
 
@@ -45,39 +47,41 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   Container _drawOptionSponsors(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: getProportionateScreenHeight(12.0)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgIconsApp.sponsor,
-          SizedBox(width: 8.0),
-          GestureDetector(
-            onTap: () => Navigator.of(context)
-                .push(
-                  MaterialPageRoute(
-                    builder: (context) => SponsorsPage(
-                      idTournament: widget.idTournament,
-                    ),
+    return prefs.user["role"] == "Administrador"
+        ? Container(
+            padding: EdgeInsets.symmetric(vertical: getProportionateScreenHeight(12.0)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgIconsApp.sponsor,
+                SizedBox(width: 8.0),
+                GestureDetector(
+                  onTap: () => Navigator.of(context)
+                      .push(
+                        MaterialPageRoute(
+                          builder: (context) => AuspicePage(
+                            idTournament: widget.idTournament,
+                          ),
+                        ),
+                      )
+                      .then((value) => categBloc.getAuspicesDataUpdate()),
+                  child: Text(
+                    "Auspicios",
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(
+                          color: ColorsApp.orange,
+                          fontWeight: FontWeight.w700,
+                        ),
                   ),
                 )
-                .then((value) => categBloc.getSponsorsDataUpdate()),
-            child: Text(
-              "Auspicios",
-              style: Theme.of(context).textTheme.bodyText2.copyWith(
-                    color: ColorsApp.orange,
-                    fontWeight: FontWeight.w700,
-                  ),
+              ],
             ),
           )
-        ],
-      ),
-    );
+        : Container();
   }
 
   Widget _drawFooter() {
-    return StreamBuilder<List<Sponsor>>(
-      stream: categBloc.sponsors,
+    return StreamBuilder<List<Auspice>>(
+      stream: categBloc.auspices,
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data.length > 0) {
           return BottomSlider(sponsors: snapshot.data);
@@ -90,7 +94,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
   StreamBuilder<List<Category>> _drawContent() {
     return StreamBuilder(
-      stream: categBloc.category,
+      stream: categBloc.streamCategory,
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data.isNotEmpty) {
           return _drawCategories(snapshot.data);
