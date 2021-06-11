@@ -121,9 +121,9 @@ class _GamesPageState extends State<GamesPage> {
         _drawHeader(game),
         Divider(thickness: 1.2, color: ColorsApp.greyObscured),
         SizedBox(height: getProportionateScreenHeight(8.0)),
-        _drawPlayer(game.jug1, game.scoreJugador1, game.scoreJugador2),
+        _drawPlayer(game.jug1, 12, 44),
         SizedBox(height: getProportionateScreenHeight(12.0)),
-        _drawPlayer(game.jug2, game.scoreJugador2, game.scoreJugador1),
+        _drawPlayer(game.jug2, 33, 12),
         SizedBox(height: getProportionateScreenHeight(8.0)),
         Divider(thickness: 1.2, color: ColorsApp.greyObscured),
         _drawOptionDetails(game),
@@ -291,7 +291,7 @@ class _GamesPageState extends State<GamesPage> {
 
   String _getTitleGame(Game game) {
     if (game.etapa == "") {
-      return "Partido de grupo " + game.nombre;
+      return "Partido de " + game.nombre;
     } else {
       return "Partido de " + game.etapa;
     }

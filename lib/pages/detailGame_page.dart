@@ -28,8 +28,10 @@ class _DetailGamePageState extends State<DetailGamePage> {
     super.initState();
     gameBloc.getSets(widget.game.id);
     setState(() {
-      score1 = widget.game.scoreJugador1;
-      score2 = widget.game.scoreJugador2;
+      // score1 = widget.game.rondaTorneoId;
+      // score2 = widget.game.marcador;
+      score2 = 111;
+      score1 = 121;
     });
   }
 
@@ -289,9 +291,9 @@ class _DetailGamePageState extends State<DetailGamePage> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _drawPlayer(widget.game.jug1, widget.game.scoreJugador1, widget.game.scoreJugador2),
+                _drawPlayer(widget.game.jug1, 34, 26),
                 Expanded(flex: 2, child: Container()),
-                _drawPlayer(widget.game.jug2, widget.game.scoreJugador2, widget.game.scoreJugador1),
+                _drawPlayer(widget.game.jug2,55,34),
               ],
             ),
           ),

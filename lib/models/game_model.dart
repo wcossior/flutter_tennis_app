@@ -15,39 +15,49 @@ class Game {
   String nombre;
   String etapa;
   String horaInicio;
+  String horaInicioMv;
+  String horaFin;
   String jugadorUnoId;
   String jugadorDosId;
   String jug1;
   String jug2;
-  int scoreJugador1;
-  int scoreJugador2;
-  int nroCancha;
+  String rondaTorneoId;
+  String marcador;
+  String nroCancha;
+  bool partidoTerminado;
 
-  Game(
-      {this.id,
-      this.nombre,
-      this.etapa,
-      this.horaInicio,
-      this.jugadorUnoId,
-      this.jugadorDosId,
-      this.jug1,
-      this.jug2,
-      this.scoreJugador1,
-      this.scoreJugador2,
-      this.nroCancha});
-      
+  Game({
+    this.id,
+    this.nombre,
+    this.etapa,
+    this.horaInicio,
+    this.horaInicioMv,
+    this.horaFin,
+    this.jugadorUnoId,
+    this.jugadorDosId,
+    this.jug1,
+    this.jug2,
+    this.rondaTorneoId,
+    this.marcador,
+    this.nroCancha,
+    this.partidoTerminado,
+  });
+
   Game.fromJsonMap(Map<String, dynamic> json) {
     id = json["id"];
     nombre = json["nombre"] ?? "";
     etapa = json["etapa"] ?? "";
-    horaInicio = formatDate(json["hora_inicio"]);
+    horaInicio = json["hora_inicio"]!=null ? formatDate(json["hora_inicio"]) : "Sin definir";
+    horaInicioMv = json["hora_inicio_mv"]!=null ? formatDate(json["hora_inicio_mv"]) : "Sin definir";
+    horaFin = json["hora_fin"]!=null ? formatDate(json["hora_fin"]) : "Sin definir";
     jugadorUnoId = json["jugador_uno_id"];
     jugadorDosId = json["jugador_dos_id"];
     jug1 = json["jug1"];
     jug2 = json["jug2"];
-    scoreJugador1 = json["score_jugador1"];
-    scoreJugador2 = json["score_jugador2"];
-    nroCancha = json["numero_cancha"];
+    rondaTorneoId = json["ronda_torneo_id"];
+    marcador = json["marcador"] ?? "Sin definir";
+    nroCancha = json["numero_cancha"].toString() ?? "Sin definir";
+    partidoTerminado = json["partido_terminado"]?? false;
   }
 
   String formatDate(dateWithoutFormat) {
