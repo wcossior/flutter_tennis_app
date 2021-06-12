@@ -30,6 +30,12 @@ class _FormNewSetPageState extends State<FormNewSetPage> {
   TextEditingController set3player2Controller = TextEditingController();
 
   @override
+  void initState() { 
+    super.initState();
+    inicializarCamposDelFormulario();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
@@ -41,6 +47,17 @@ class _FormNewSetPageState extends State<FormNewSetPage> {
         ],
       ),
     );
+  }
+
+  void inicializarCamposDelFormulario() {
+    set1player1Controller.text = widget.game.marcador[0]["jugador_uno"].toString();
+    set1player2Controller.text = widget.game.marcador[0]["jugador_dos"].toString();
+    set2player1Controller.text = widget.game.marcador[1]["jugador_uno"].toString();
+    set2player2Controller.text = widget.game.marcador[1]["jugador_dos"].toString();
+    if (widget.game.marcador.length == 3) {
+      set3player1Controller.text = widget.game.marcador[2]["jugador_uno"].toString();
+      set3player2Controller.text = widget.game.marcador[2]["jugador_dos"].toString();
+    }
   }
 
   Widget _loadingIndicator(GameBloc bloc) {

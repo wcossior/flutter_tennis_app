@@ -46,25 +46,28 @@ class _DetailGamePageState extends State<DetailGamePage> {
         ),
         child: Stack(children: [_drawContent(context), _loadingIndicator(gameBloc)]),
       ),
-      floatingActionButton: FloatingActionButton(
-          heroTag: "actualizar marcador",
-          child: SvgIconsApp.formAdd,
-          onPressed: () {
-            Navigator.of(context)
-                .push(
-              MaterialPageRoute(
-                builder: (context) => FormNewSetPage(
-                  game: partido,
-                ),
-              ),
+      floatingActionButton: widget.game.partidoTerminado
+          ? FloatingActionButton(
+              heroTag: "actualizar marcador",
+              child: SvgIconsApp.formAdd,
+              onPressed: () {
+                Navigator.of(context)
+                    .push(
+                  MaterialPageRoute(
+                    builder: (context) => FormNewSetPage(
+                      game: partido,
+                    ),
+                  ),
+                )
+                    .then((_) async {
+                  Game p = await gameBloc.getAGame(widget.idCategoria, widget.game.id, widget.typeInfo);
+                  setState(() {
+                    partido = p;
+                  });
+                });
+              },
             )
-                .then((_) async {
-              Game p = await gameBloc.getAGame(widget.idCategoria, widget.game.id, widget.typeInfo);
-              setState(() {
-                partido = p;
-              });
-            });
-          }),
+          : Container(),
     );
   }
 
