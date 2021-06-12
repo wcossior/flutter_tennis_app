@@ -3,6 +3,7 @@ import 'package:flutter_app_tenis/blocs/game_bloc.dart';
 import 'package:flutter_app_tenis/models/game_model.dart';
 import 'package:flutter_app_tenis/pages/fullTime_page.dart';
 import 'package:flutter_app_tenis/pages/updateScore_page.dart';
+import 'package:flutter_app_tenis/preferences/userPreferences.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/styles/svgIcons.dart';
@@ -22,6 +23,7 @@ class _DetailGamePageState extends State<DetailGamePage> {
   GameBloc gameBloc = GameBloc();
   bool firstClic = false;
   Game partido;
+  final prefs = new UserPreferences();
 
   @override
   void initState() {
@@ -44,7 +46,7 @@ class _DetailGamePageState extends State<DetailGamePage> {
         ),
         child: Stack(children: [_drawContent(context), _loadingIndicator(gameBloc)]),
       ),
-      floatingActionButton: partido.partidoTerminado
+      floatingActionButton: partido.partidoTerminado && prefs.user["rol"] == "Arbitro"
           ? FloatingActionButton(
               heroTag: "actualizar marcador",
               child: SvgIconsApp.formAdd,
@@ -108,7 +110,11 @@ class _DetailGamePageState extends State<DetailGamePage> {
         _drawGeneralScore(context),
         if (!partido.partidoTerminado && partido.jug1 != "BYE" && partido.jug2 != "BYE")
           SizedBox(height: getProportionateScreenHeight(12.0)),
-        if (!partido.partidoTerminado && partido.jug1 != "BYE" && partido.jug2 != "BYE") _finishGame(),
+        if (!partido.partidoTerminado &&
+            partido.jug1 != "BYE" &&
+            partido.jug2 != "BYE" &&
+            prefs.user["rol"] == "Arbitro")
+          _finishGame(),
         SizedBox(height: getProportionateScreenHeight(12.0)),
         SvgIconsApp.courtDetail,
         SizedBox(height: getProportionateScreenHeight(12.0)),
@@ -299,7 +305,6 @@ class _DetailGamePageState extends State<DetailGamePage> {
       ),
       onPressed: !partido.partidoTerminado
           ? () {
-             
               Navigator.of(context)
                   .push(
                 MaterialPageRoute(

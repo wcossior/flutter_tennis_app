@@ -1,10 +1,8 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/home_bloc.dart';
-import 'package:flutter_app_tenis/pages/notifications_page.dart';
 import 'package:flutter_app_tenis/pages/tournament_page.dart';
 import 'package:flutter_app_tenis/preferences/userPreferences.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/styles/svgIcons.dart';
@@ -17,12 +15,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int currentPage = 0;
   HomeBloc bloc = HomeBloc();
   bool showMessage = false;
   final prefs = new UserPreferences();
-  GlobalKey _bottomNavigationKey = GlobalKey();
-  final pageController = PageController();
 
   @override
   void initState() {
@@ -30,21 +25,12 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) => showMessageLoginSuccessful());
   }
 
-  void onPageChanged(int index) {
-    setState(() {
-      currentPage = index;
-    });
-  }
-// onPressed: bloc.logoutUser,
-
   @override
   Widget build(BuildContext context) {
-    print(prefs.user["nombre"]);
     return Scaffold(
       appBar: _drawAppBar(context),
       backgroundColor: ColorsApp.white,
-      body: _getPage(),
-      bottomNavigationBar: _drawBottomNav(),
+      body: TournamentPage(),
     );
   }
 
@@ -120,35 +106,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _getPage() {
-    return Container(
-      child: PageView(
-        children: [TournamentPage(), NotificationPage()],
-        controller: pageController,
-        onPageChanged: onPageChanged,
-      ),
-    );
-  }
-
-  CurvedNavigationBar _drawBottomNav() {
-    return CurvedNavigationBar(
-      index: currentPage,
-      key: _bottomNavigationKey,
-      backgroundColor: ColorsApp.white,
-      height: getProportionateScreenHeight(55.0),
-      color: ColorsApp.green,
-      items: [
-        SvgIconsApp.trophy,
-        SvgIconsApp.bell,
-      ],
-      onTap: (index) {
-        setState(() {
-          pageController.jumpToPage(index);
-        });
-      },
     );
   }
 

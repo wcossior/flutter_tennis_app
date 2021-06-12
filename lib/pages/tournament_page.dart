@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/tournament_bloc.dart';
 import 'package:flutter_app_tenis/models/tournament_model.dart';
+import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/widgets/tournamentCard.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 
@@ -25,7 +26,6 @@ class _TournamentPageState extends State<TournamentPage> with AutomaticKeepAlive
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
     return Container(
       child: _drawContent(),
     );
@@ -47,21 +47,31 @@ class _TournamentPageState extends State<TournamentPage> with AutomaticKeepAlive
     );
   }
 
-  Widget _drawListTournament(List<Tournament> data) {
-    return ListView(
-      padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.055),
-      children: _drawTournaments(data),
+  Widget _drawTitle() {
+    return Column(
+      children: [
+        Text(
+          "Torneos",
+          style: Theme.of(context).textTheme.headline2.copyWith(
+                color: ColorsApp.green,
+              ),
+        ),
+        SizedBox(height: getProportionateScreenHeight(20.0)),
+      ],
     );
   }
 
-  List<Widget> _drawTournaments(List<Tournament> data) {
-    final List<Widget> drawnTournament = [];
-    final tournamentsList = data;
+  Widget _drawListTournament(List<Tournament> data) {
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.055),
+      itemBuilder: (ctx, index) {
+        return index == 0 ? _drawTitle() : _drawTorneo(data[index - 1]);
+      },
+      itemCount: data.length + 1,
+    );
+  }
 
-    tournamentsList.forEach((tournam) {
-      final widgetTemp = TournamentCard(tournam: tournam);
-      drawnTournament.add(widgetTemp);
-    });
-    return drawnTournament;
+  Widget _drawTorneo(Tournament torneo) {
+    return TournamentCard(tournam: torneo);
   }
 }
