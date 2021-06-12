@@ -126,8 +126,10 @@ class _SchedulingPageState extends State<SchedulingPage> {
           SvgIconsApp.clock,
           SizedBox(width: 6.0),
           Text(
-            '${event.hora}',
-            style: Theme.of(context).textTheme.subtitle2,
+            '${event.horaInicio}',
+            style: event.horaInicioMviborita == "Se mantiene"
+                ? Theme.of(context).textTheme.subtitle2
+                : Theme.of(context).textTheme.subtitle2.copyWith(decoration: TextDecoration.lineThrough),
           ),
         ],
       ),

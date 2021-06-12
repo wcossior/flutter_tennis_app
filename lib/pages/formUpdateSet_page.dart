@@ -97,7 +97,6 @@ class _FormUpdateSetPageState extends State<FormUpdateSetPage> {
     return Container(
       child: TextFormField(
         keyboardType: TextInputType.text,
-        onSaved: bloc.sinkNroSet,
         validator: (value) => _validateText(value),
         initialValue: widget.setTennis.nroSet,
         decoration: InputDecoration(
@@ -115,7 +114,6 @@ class _FormUpdateSetPageState extends State<FormUpdateSetPage> {
         keyboardType: TextInputType.number,
         validator: (value) => _validateNumber(value),
         initialValue: widget.setTennis.scoreJug1.toString(),
-        onSaved: bloc.sinkScore1,
         decoration: InputDecoration(
             floatingLabelBehavior: FloatingLabelBehavior.always,
             suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Avatar.svg"),
@@ -131,7 +129,6 @@ class _FormUpdateSetPageState extends State<FormUpdateSetPage> {
         keyboardType: TextInputType.number,
         validator: (value) => _validateNumber(value),
         initialValue: widget.setTennis.scoreJug2.toString(),
-        onSaved: bloc.sinkScore2,
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.always,
           suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Avatar.svg"),
@@ -170,7 +167,7 @@ class _FormUpdateSetPageState extends State<FormUpdateSetPage> {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
           KeyboardUtil.hideKeyboard(context);
-          await bloc.updateSet(widget.setTennis.id);
+          // await bloc.updateSet(widget.setTennis.id);
           String text = bloc.valueMessage;
           var mssg = _showMessage(context, text);
           await mssg.show();

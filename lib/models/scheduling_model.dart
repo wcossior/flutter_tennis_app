@@ -12,36 +12,72 @@ class Scheduling {
 
 class Event {
   String id;
-  String categoria;
   String cancha;
-  String hora;
+  String horaInicio;
+  String horaInicioMviborita;
+  String horaFin;
   String jugador1;
-  String pertenece1;
+  String rondaTorneoId;
   String jugador2;
-  String pertenece2;
-  String torneoId;
+  bool partidoTerminado;
 
   Event({
     this.id,
-    this.categoria,
     this.cancha,
-    this.hora,
+    this.horaInicio,
+    this.horaInicioMviborita,
+    this.horaFin,
     this.jugador1,
-    this.pertenece1,
+    this.rondaTorneoId,
     this.jugador2,
-    this.pertenece2,
-    this.torneoId,
+    this.partidoTerminado,
   });
 
   Event.fromJsonMap(Map<String, dynamic> json) {
     id = json["id"];
-    categoria = json["categoria"];
-    cancha = json["cancha"];
-    hora = json["hora"];
-    jugador1 = json["jugador1"];
-    pertenece1 = json["pertenece1"];
-    jugador2 = json["jugador2"];
-    pertenece2 = json["pertenece2"];
-    torneoId = json["torneo_id"];
+    cancha = json["numero_cancha"].toString();
+    horaInicio =  formatDate(json["hora_inicio"]);
+    horaInicioMviborita = json["hora_inico_mv"]!=null ? formatDate(json["hora_inico_mv"]) : "Se mantiene";
+    horaFin = json["hora_fin"]!=null ? formatDate(json["hora_fin"]) : "Sin definir";
+    jugador1 = json["jug1"];
+    rondaTorneoId = json["ronda_torneo_id"];
+    jugador2 = json["jug2"];
+    partidoTerminado = json["partido_terminado"]??false;
+  }
+
+    String formatDate(dateWithoutFormat) {
+    DateTime date = DateTime.parse(dateWithoutFormat);
+    String day = date.day.toString();
+    String month = getNameMonthToEsp(date.month);
+    String hour = date.hour.toString();
+    String minutes = date.minute.toString();
+    if (date.hour < 10) {
+      hour = "0" + hour;
+    }
+    if (date.minute < 10) {
+      minutes = "0" + minutes;
+    }
+
+    String formatedDate = "$day $month, $hour:$minutes";
+
+    return formatedDate;
+  }
+
+  String getNameMonthToEsp(int month) {
+    List<String> months = [
+      "Ene",
+      "Feb",
+      "Mar",
+      "Abr",
+      "May",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dic",
+    ];
+    return months[month - 1];
   }
 }

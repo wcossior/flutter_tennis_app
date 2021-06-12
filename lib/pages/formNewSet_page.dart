@@ -6,12 +6,12 @@ import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/utils/keyboard.dart';
 import 'package:flutter_app_tenis/widgets/customButton.dart';
-import 'package:flutter_app_tenis/widgets/customSurfixIcon.dart';
 
 class FormNewSetPage extends StatefulWidget {
   final Game game;
+  Function(Game) callback;
 
-  FormNewSetPage({Key key, this.game}) : super(key: key);
+  FormNewSetPage({Key key, this.game, this.callback}) : super(key: key);
 
   @override
   _FormNewSetPageState createState() => _FormNewSetPageState();
@@ -21,6 +21,13 @@ class _FormNewSetPageState extends State<FormNewSetPage> {
   GameBloc gameBloc = GameBloc();
 
   final _formKey = GlobalKey<FormState>();
+  List<dynamic> marcador = [];
+  TextEditingController set1player1Controller = TextEditingController();
+  TextEditingController set1player2Controller = TextEditingController();
+  TextEditingController set2player1Controller = TextEditingController();
+  TextEditingController set2player2Controller = TextEditingController();
+  TextEditingController set3player1Controller = TextEditingController();
+  TextEditingController set3player2Controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -65,13 +72,15 @@ class _FormNewSetPageState extends State<FormNewSetPage> {
                 ),
               ),
               _drawTitleAdd(),
-              SizedBox(height: getProportionateScreenHeight(30.0)),
-              _drawFieldNroSet(gameBloc),
               SizedBox(height: getProportionateScreenHeight(20.0)),
+              _drawNamePlayers(),
+              SizedBox(height: getProportionateScreenHeight(30.0)),
               _drawFieldScore1(gameBloc),
               SizedBox(height: getProportionateScreenHeight(20.0)),
               _drawFieldScore2(gameBloc),
               SizedBox(height: getProportionateScreenHeight(20.0)),
+              _drawFieldScore3(gameBloc),
+              SizedBox(height: getProportionateScreenHeight(35.0)),
               _drawButtonSave(gameBloc),
               SizedBox(height: getProportionateScreenHeight(30.0)),
             ],
@@ -81,60 +90,131 @@ class _FormNewSetPageState extends State<FormNewSetPage> {
     );
   }
 
+  Row _drawNamePlayers() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Text(
+            widget.game.jug1,
+            softWrap: true,
+            maxLines: 2,
+            textAlign: TextAlign.left,
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
+        ),
+        Expanded(child: SizedBox(width: getProportionateScreenWidth(12.0))),
+        Expanded(
+          child: Text(
+            widget.game.jug2,
+            softWrap: true,
+            maxLines: 2,
+            textAlign: TextAlign.right,
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _drawTitleAdd() {
     return Container(
       alignment: Alignment.center,
       child: Text(
-        "Nuevo set",
+        "Actualizar marcador",
         style: Theme.of(context).textTheme.headline2.copyWith(color: ColorsApp.green),
       ),
     );
   }
 
-  Widget _drawFieldNroSet(GameBloc bloc) {
-    return Container(
-      child: TextFormField(
-        keyboardType: TextInputType.text,
-        onSaved: bloc.sinkNroSet,
-        validator: (value) => _validateText(value),
-        decoration: InputDecoration(
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Avatar.svg"),
-            labelText: 'Número de set',
-            hintText: "Ejemplo: Primer set"),
-      ),
-    );
-  }
-
   Widget _drawFieldScore1(GameBloc bloc) {
-    return Container(
-      child: TextFormField(
-        keyboardType: TextInputType.number,
-        validator: (value) => _validateNumber(value),
-        onSaved: bloc.sinkScore1,
-        decoration: InputDecoration(
+    return Row(children: [
+      Expanded(
+        child: TextFormField(
+          controller: set1player1Controller,
+          keyboardType: TextInputType.number,
+          validator: (value) => _validateNumber(value),
+          decoration: InputDecoration(
             floatingLabelBehavior: FloatingLabelBehavior.always,
-            suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Avatar.svg"),
-            labelText: 'Score de ${widget.game.jug1}',
-            hintText: 'Ejemplo: 30'),
+            labelText: '1er set',
+            hintText: 'Ej: 6',
+          ),
+        ),
       ),
-    );
+      SizedBox(width: getProportionateScreenWidth(30.0)),
+      Expanded(
+        child: TextFormField(
+          controller: set1player2Controller,
+          keyboardType: TextInputType.number,
+          validator: (value) => _validateNumber(value),
+          decoration: InputDecoration(
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            labelText: '1er set',
+            hintText: 'Ej: 0',
+          ),
+        ),
+      ),
+    ]);
   }
 
   Widget _drawFieldScore2(GameBloc bloc) {
-    return Container(
-      child: TextFormField(
-        keyboardType: TextInputType.number,
-        validator: (value) => _validateNumber(value),
-        onSaved: bloc.sinkScore2,
-        decoration: InputDecoration(
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Avatar.svg"),
-          labelText: 'Score de ${widget.game.jug2}',
-          hintText: 'Ejemplo: 40',
+    return Row(children: [
+      Expanded(
+        child: TextFormField(
+          controller: set2player1Controller,
+          keyboardType: TextInputType.number,
+          validator: (value) => _validateNumber(value),
+          decoration: InputDecoration(
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            labelText: '2do set',
+            hintText: 'Ej: 0',
+          ),
         ),
       ),
-    );
+      SizedBox(width: getProportionateScreenWidth(30.0)),
+      Expanded(
+        child: TextFormField(
+          controller: set2player2Controller,
+          keyboardType: TextInputType.number,
+          validator: (value) => _validateNumber(value),
+          decoration: InputDecoration(
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            labelText: '2do set',
+            hintText: 'Ej: 6',
+          ),
+        ),
+      ),
+    ]);
+  }
+
+  Widget _drawFieldScore3(GameBloc bloc) {
+    return Row(children: [
+      Expanded(
+        child: TextFormField(
+          controller: set3player1Controller,
+          keyboardType: TextInputType.number,
+          validator: (value) => _validateNumberOrEmpty(value),
+          decoration: InputDecoration(
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            labelText: '3er set',
+            hintText: 'Ej: 6',
+          ),
+        ),
+      ),
+      SizedBox(width: getProportionateScreenWidth(30.0)),
+      Expanded(
+        child: TextFormField(
+          controller: set3player2Controller,
+          keyboardType: TextInputType.number,
+          validator: (value) => _validateNumberOrEmpty(value),
+          decoration: InputDecoration(
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            labelText: '3er set',
+            hintText: 'Ej: 0',
+          ),
+        ),
+      ),
+    ]);
   }
 
   String _validateNumber(String value) {
@@ -146,14 +226,23 @@ class _FormNewSetPageState extends State<FormNewSetPage> {
     return null;
   }
 
-  String _validateText(String value) {
-    Pattern pattern = r'^[a-zA-Z\s]*$';
+  String _validateNumberOrEmpty(String value) {
+    Pattern pattern = r'^[0-9]*$';
     RegExp regExp = new RegExp(pattern);
-    if (value == null || value.isEmpty || !regExp.hasMatch(value)) {
-      return 'Texto invalido';
+    if (!regExp.hasMatch(value)) {
+      return 'Número invalido';
     }
     return null;
   }
+
+  // String _validateText(String value) {
+  //   Pattern pattern = r'^[a-zA-Z\s]*$';
+  //   RegExp regExp = new RegExp(pattern);
+  //   if (value == null || value.isEmpty || !regExp.hasMatch(value)) {
+  //     return 'Texto invalido';
+  //   }
+  //   return null;
+  // }
 
   Widget _drawButtonSave(GameBloc bloc) {
     return CustomButton(
@@ -164,8 +253,27 @@ class _FormNewSetPageState extends State<FormNewSetPage> {
       onPressed: () async {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
+
+          var primerSet = {
+            "jugador_uno": int.parse(set1player1Controller.text),
+            "jugador_dos": int.parse(set1player2Controller.text),
+          };
+          marcador.add(primerSet);
+          var segundoSet = {
+            "jugador_uno": int.parse(set2player1Controller.text),
+            "jugador_dos": int.parse(set2player2Controller.text),
+          };
+          marcador.add(segundoSet);
+
+          if (set3player1Controller.text != "" && set3player2Controller.text != "") {
+            var tercerSet = {
+              "jugador_uno": int.parse(set3player1Controller.text),
+              "jugador_dos": int.parse(set3player2Controller.text),
+            };
+            marcador.add(tercerSet);
+          }
           KeyboardUtil.hideKeyboard(context);
-          await bloc.newSet(widget.game.id);
+          await bloc.updateScores(widget.game.id, marcador);
           String text = bloc.valueMessage;
           var mssg = _showMessage(context, text);
           await mssg.show();

@@ -16,10 +16,24 @@ class GameProvider {
     return games.items;
   }
 
-  Future<String> updateScores(String idPartido, int scoreJug1, int scoreJug2) async {
-    final url = Uri.https(_url, "/partidos/$idPartido/${scoreJug1.toString()}/${scoreJug2.toString()}");
+  Future<Game> getAGame(String idCategory, String idPartido, String typeInfo) async {
+    final url = Uri.https(_url, "/$typeInfo/$idCategory/$idPartido");
 
-    final resp = await http.put(url);
+    final resp = await http.get(url);
+    final decodeData = json.decode(resp.body);
+    final games = new Games.fromJsonList(decodeData);
+
+    return games.items[0];
+  }
+
+  Future<String> updateScores(String idPartido, List<dynamic> marcador) async {
+    final url = Uri.https(_url, "/actualizarResultado");
+    final jsonEncoder = JsonEncoder();
+    final marcadorActualizado = {
+      "idPartido": idPartido,
+      "score": jsonEncoder.convert(marcador),
+    };
+    final resp = await http.put(url, body: marcadorActualizado);
     final decodeData = json.decode(resp.body);
     return decodeData["msg"];
   }
@@ -37,7 +51,6 @@ class GameProvider {
     final decodeData = json.decode(resp.body);
     return decodeData["msg"];
   }
-
 
   Future<String> newSet(int idPartido, int scoreJug1, int scoreJug2, String nroSet) async {
     final url = Uri.https(_url, "/newSet");
@@ -59,8 +72,9 @@ class GameProvider {
     final resp = await http.delete(url);
     final decodeData = json.decode(resp.body);
     return decodeData["msg"];
-  }  
-  
+  }
+  //partidoTerminado
+
   Future<List<TennisSet>> getSets(String idPartido) async {
     final url = Uri.https(_url, "/sets/$idPartido");
 
@@ -70,6 +84,5 @@ class GameProvider {
     final setsTennis = new TennisSets.fromJsonList(decodeData);
 
     return setsTennis.items;
-  }  
-
+  }
 }

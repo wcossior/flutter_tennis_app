@@ -17,11 +17,14 @@ class _BottomSliderState extends State<BottomSlider> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _drawSlider(context),
-        _drawWayPoints(),
-      ],
+    return Container(
+      height: SizeConfig.screenHeight * 0.22,
+      child: Column(
+        children: [
+          _drawSlider(context),
+          _drawWayPoints(),
+        ],
+      ),
     );
   }
 

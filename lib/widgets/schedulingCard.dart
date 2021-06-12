@@ -36,7 +36,31 @@ class _SchedulingCardState extends State<SchedulingCard> {
         SizedBox(height: getProportionateScreenHeight(8.0)),
         _drawPlayers(event),
         SizedBox(height: getProportionateScreenHeight(8.0)),
+       _drawStatusEvent(event.partidoTerminado),
+        SizedBox(height: getProportionateScreenHeight(8.0)),
       ],
+    );
+  }
+
+  Widget _drawStatusEvent(bool status) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: getProportionateScreenWidth(6.0),
+        vertical: getProportionateScreenHeight(3.0),
+      ),
+      child: Text(
+        status == true ? "Partido finalizado" : "Partido no finalizado",
+        style: Theme.of(context).textTheme.bodyText1.copyWith(
+              color: ColorsApp.white,
+              fontSize: 10.0,
+            ),
+      ),
+      decoration: BoxDecoration(
+        color: status == true ? ColorsApp.orange : ColorsApp.green,
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+      ),
     );
   }
 
@@ -67,26 +91,14 @@ class _SchedulingCardState extends State<SchedulingCard> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            children: [
-              SvgIconsApp.avatarPlayer,
-              SizedBox(height: 6.0),
-              Text(
-                event.jugador2,
-                softWrap: true,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w300),
-              ),
-            ],
-          ),
-          SizedBox(height: 10.0),
+          SvgIconsApp.avatarPlayer,
+          SizedBox(height: 6.0),
           Text(
-            event.pertenece2,
+            event.jugador2,
             softWrap: true,
             textAlign: TextAlign.center,
             maxLines: 2,
-            style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w700),
+            style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w300),
           ),
         ],
       ),
@@ -99,26 +111,14 @@ class _SchedulingCardState extends State<SchedulingCard> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            children: [
-              SvgIconsApp.avatarPlayer,
-              SizedBox(height: 6.0),
-              Text(
-                event.jugador1,
-                softWrap: true,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w300),
-              ),
-            ],
-          ),
-          SizedBox(height: 10.0),
+          SvgIconsApp.avatarPlayer,
+          SizedBox(height: 6.0),
           Text(
-            event.pertenece1,
+            event.jugador1,
             softWrap: true,
             textAlign: TextAlign.center,
             maxLines: 2,
-            style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w700),
+            style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w300),
           ),
         ],
       ),
@@ -136,9 +136,17 @@ class _SchedulingCardState extends State<SchedulingCard> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            event.categoria,
-            style: Theme.of(context).textTheme.bodyText1,
+          Row(
+            children: [
+              Text(
+                "Cambio de hora: ",
+                style: Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50),
+              ),
+              Text(
+                event.horaInicioMviborita,
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+            ],
           ),
           Text(
             "Cancha " + event.cancha,

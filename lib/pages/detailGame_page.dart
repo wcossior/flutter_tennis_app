@@ -11,7 +11,10 @@ import 'package:flutter_app_tenis/styles/svgIcons.dart';
 
 class DetailGamePage extends StatefulWidget {
   final Game game;
-  DetailGamePage({Key key, @required this.game}) : super(key: key);
+  final String idCategoria;
+  final String typeInfo;
+  DetailGamePage({Key key, @required this.game, @required this.idCategoria, @required this.typeInfo})
+      : super(key: key);
 
   @override
   _DetailGamePageState createState() => _DetailGamePageState();
@@ -19,20 +22,15 @@ class DetailGamePage extends StatefulWidget {
 
 class _DetailGamePageState extends State<DetailGamePage> {
   GameBloc gameBloc = GameBloc();
-  int score1;
-  int score2;
   bool firstClic = false;
+  Game partido;
 
   @override
   void initState() {
-    super.initState();
-    gameBloc.getSets(widget.game.id);
     setState(() {
-      // score1 = widget.game.rondaTorneoId;
-      // score2 = widget.game.marcador;
-      score2 = 111;
-      score1 = 121;
+      partido = widget.game;
     });
+    super.initState();
   }
 
   @override
@@ -49,18 +47,23 @@ class _DetailGamePageState extends State<DetailGamePage> {
         child: Stack(children: [_drawContent(context), _loadingIndicator(gameBloc)]),
       ),
       floatingActionButton: FloatingActionButton(
-          heroTag: "añadir set",
+          heroTag: "actualizar marcador",
           child: SvgIconsApp.formAdd,
           onPressed: () {
             Navigator.of(context)
                 .push(
-                  MaterialPageRoute(
-                    builder: (context) => FormNewSetPage(
-                      game: widget.game,
-                    ),
-                  ),
-                )
-                .then((_) async => gameBloc.getSets(widget.game.id));
+              MaterialPageRoute(
+                builder: (context) => FormNewSetPage(
+                  game: partido,
+                ),
+              ),
+            )
+                .then((_) async {
+              Game p = await gameBloc.getAGame(widget.idCategoria, widget.game.id, widget.typeInfo);
+              setState(() {
+                partido = p;
+              });
+            });
           }),
     );
   }
@@ -102,10 +105,13 @@ class _DetailGamePageState extends State<DetailGamePage> {
         ),
         SizedBox(height: getProportionateScreenHeight(12.0)),
         _drawGeneralScore(context),
-        SizedBox(height: getProportionateScreenHeight(12.0)),
-        _finishGame(),
+        if (!partido.partidoTerminado && partido.jug1 != "BYE" && partido.jug2 != "BYE")
+          SizedBox(height: getProportionateScreenHeight(12.0)),
+        if (!partido.partidoTerminado && partido.jug1 != "BYE" && partido.jug2 != "BYE") _finishGame(),
         SizedBox(height: getProportionateScreenHeight(12.0)),
         SvgIconsApp.courtDetail,
+        SizedBox(height: getProportionateScreenHeight(12.0)),
+        _drawClubs(context),
         SizedBox(height: getProportionateScreenHeight(12.0)),
         Container(
           alignment: Alignment.centerLeft,
@@ -116,14 +122,51 @@ class _DetailGamePageState extends State<DetailGamePage> {
         ),
         SizedBox(height: getProportionateScreenHeight(12.0)),
         Expanded(child: _drawSetsResults(context)),
-        SizedBox(height: getProportionateScreenHeight(12.0)),
       ],
+    );
+  }
+
+  Container _drawClubs(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(getProportionateScreenWidth(8.0)),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: ColorsApp.greyObscured,
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(7.0),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              partido.club1,
+              softWrap: true,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50),
+            ),
+          ),
+          Expanded(child: SizedBox(width: getProportionateScreenWidth(12.0))),
+          Expanded(
+            child: Text(
+              partido.club2,
+              softWrap: true,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _drawTitle(BuildContext context) {
     return Text(
-      _getTitleGame(widget.game),
+      _getTitleGame(partido),
       style: Theme.of(context).textTheme.headline2.copyWith(
             color: ColorsApp.blueObscured,
           ),
@@ -149,16 +192,40 @@ class _DetailGamePageState extends State<DetailGamePage> {
           Radius.circular(7.0),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
-          Text(
-            widget.game.horaInicio,
-            style: Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Hora inicio " + partido.horaInicio,
+                style: partido.horaInicioMv == "Hora se mantiene"
+                    ? Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50)
+                    : Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: ColorsApp.blueObscuredOp50, decoration: TextDecoration.lineThrough),
+              ),
+              Text(
+                "Cancha " + partido.nroCancha.toString(),
+                style: Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50),
+              ),
+            ],
           ),
-          Text(
-            "Cancha " + widget.game.nroCancha.toString(),
-            style: Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50),
+          SizedBox(height: getProportionateScreenHeight(12.0)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (partido.horaInicioMv != "Hora se mantiene")
+                Text(
+                  "Hora inicio " + partido.horaInicioMv,
+                  style: Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50),
+                ),
+              Text(
+                "Hora fin " + partido.horaFin,
+                style: Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50),
+              ),
+            ],
           ),
         ],
       ),
@@ -178,8 +245,9 @@ class _DetailGamePageState extends State<DetailGamePage> {
       ),
       child: Row(
         children: [
-          _drawPlayer(widget.game.jug1, score1, score2),
-          _drawScoresPlayers(score1, score2),
+          _drawPlayer(partido.jug1, partido.generalScore1, partido.generalScore2),
+          SizedBox(width: getProportionateScreenWidth(8.0)),
+          _drawScoresPlayers(partido.generalScore1, partido.generalScore2),
           Expanded(
             flex: 1,
             child: Text(
@@ -188,8 +256,9 @@ class _DetailGamePageState extends State<DetailGamePage> {
               style: Theme.of(context).textTheme.headline2.copyWith(color: ColorsApp.blueObscuredOp50),
             ),
           ),
-          _drawScoresPlayers(score2, score1),
-          _drawPlayer(widget.game.jug2, score2, score1),
+          _drawScoresPlayers(partido.generalScore2, partido.generalScore1),
+          SizedBox(width: getProportionateScreenWidth(8.0)),
+          _drawPlayer(partido.jug2, partido.generalScore2, partido.generalScore1),
         ],
       ),
     );
@@ -252,19 +321,15 @@ class _DetailGamePageState extends State<DetailGamePage> {
       btnOkColor: ColorsApp.orange,
       btnCancelText: "No",
       btnCancelColor: ColorsApp.green,
-      btnCancelOnPress: () {},
-      btnOkOnPress: () async {
-        await gameBloc.getGeneralResult(widget.game.id);
-        setState(() {
-          score1 = gameBloc.scoreJugador1;
-          score2 = gameBloc.scoreJugador2;
-          firstClic = true;
-        });
-        String text = gameBloc.valueMessage;
-        var mssg = _showMessage(context, text);
+      dismissOnTouchOutside: false,
+      btnCancelOnPress: () {
         setState(() {
           firstClic = false;
         });
+      },
+      btnOkOnPress: () async {
+        String text = gameBloc.valueMessage;
+        var mssg = _showMessage(context, text);
         await mssg.show();
       },
     )..show();
@@ -272,7 +337,6 @@ class _DetailGamePageState extends State<DetailGamePage> {
 
   Widget _drawSetsResults(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: getProportionateScreenWidth(12.0)),
       decoration: BoxDecoration(
         border: Border.all(
           color: ColorsApp.greyObscured,
@@ -281,26 +345,7 @@ class _DetailGamePageState extends State<DetailGamePage> {
           Radius.circular(7.0),
         ),
       ),
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.only(
-              left: SizeConfig.screenWidth * 0.055,
-              right: SizeConfig.screenWidth * 0.055,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _drawPlayer(widget.game.jug1, 34, 26),
-                Expanded(flex: 2, child: Container()),
-                _drawPlayer(widget.game.jug2,55,34),
-              ],
-            ),
-          ),
-          SizedBox(height: getProportionateScreenWidth(12.0)),
-          Expanded(child: _drawSets()),
-        ],
-      ),
+      child: _drawSets(),
     );
   }
 
@@ -366,47 +411,45 @@ class _DetailGamePageState extends State<DetailGamePage> {
   }
 
   Widget _drawSets() {
-    return StreamBuilder<List<TennisSet>>(
-      stream: gameBloc.streamSetTennis,
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data.isNotEmpty) {
-          return _drawListSet(snapshot.data);
-        }
-        if (snapshot.data == null) {
-          return Center(child: CircularProgressIndicator());
-        } else {
-          return Center(child: Text("No hay sets"));
-        }
-      },
-    );
+    List<dynamic> marcador = partido.marcador;
+
+    if (marcador.isEmpty) {
+      return Center(child: Text("No hay sets"));
+    } else {
+      return _drawListSet(marcador);
+    }
   }
 
-  Widget _drawListSet(List<TennisSet> data) {
+  Widget _drawListSet(List<dynamic> data) {
     return ListView(
       padding: EdgeInsets.only(
         left: SizeConfig.screenWidth * 0.055,
         right: SizeConfig.screenWidth * 0.055,
-        top: SizeConfig.screenHeight * 0.025,
+        top: SizeConfig.screenHeight * 0.010,
       ),
       children: _readList(data),
     );
   }
 
-  List<Widget> _readList(List<TennisSet> data) {
+  List<Widget> _readList(List<dynamic> data) {
     final List<Widget> drawnSets = [];
     final setList = data;
-
+    List<String> tituloSet = ["Primer set", "Segundo set", "Tercer set"];
+    int index = 0;
     setList.forEach((item) {
-      final widgetTemp = _drawSet(item);
+      final widgetTemp = _drawSet(item, tituloSet[index]);
       drawnSets.add(widgetTemp);
+      index++;
     });
     return drawnSets;
   }
 
-  Widget _drawSet(TennisSet setItem) {
+  Widget _drawSet(dynamic setItem, String titulo) {
     return Card(
       margin: EdgeInsets.only(
-          bottom: getProportionateScreenHeight(18.0), top: getProportionateScreenHeight(18.0)),
+        bottom: getProportionateScreenHeight(10.0),
+        top: getProportionateScreenHeight(10.0),
+      ),
       elevation: 4.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(7.0),
@@ -415,17 +458,9 @@ class _DetailGamePageState extends State<DetailGamePage> {
         padding: EdgeInsets.symmetric(vertical: getProportionateScreenHeight(12.0)),
         child: Column(
           children: [
-            _drawTitleSet(setItem.nroSet),
+            _drawTitleSet(titulo),
             Divider(),
-            _drawScoreSet(setItem.scoreJug1, setItem.scoreJug2),
-            Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _updateSet(widget.game, setItem),
-                _deleteSet(widget.game, setItem),
-              ],
-            ),
+            _drawScoreSet(setItem["jugador_uno"], setItem["jugador_dos"]),
           ],
         ),
       ),
@@ -485,16 +520,15 @@ class _DetailGamePageState extends State<DetailGamePage> {
         SizedBox(width: 8.0),
         GestureDetector(
           onTap: () {
-            Navigator.of(context)
-                .push(
-                  MaterialPageRoute(
-                    builder: (context) => FormUpdateSetPage(
-                      game: game,
-                      setTennis: setItem,
-                    ),
-                  ),
-                )
-                .then((_) async => gameBloc.getSets(widget.game.id));
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => FormUpdateSetPage(
+                  game: game,
+                  setTennis: setItem,
+                ),
+              ),
+            );
+            // .then((_) async => gameBloc.getSets(partido.id));
           },
           child: Text(
             "Editar",
@@ -544,10 +578,8 @@ class _DetailGamePageState extends State<DetailGamePage> {
         btnCancelColor: ColorsApp.green,
         btnCancelOnPress: () {},
         btnOkOnPress: () async {
-          await gameBloc.deleteSet(setItem.id);
           String text = gameBloc.valueMessage;
           var mssg = _showMessage(context, text);
-          gameBloc.getSets(widget.game.id);
           await mssg.show();
         })
       ..show();

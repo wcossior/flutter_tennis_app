@@ -47,7 +47,7 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   Container _drawOptionSponsors(BuildContext context) {
-    return prefs.user["role"] == "Administrador"
+    return prefs.user["rol"] == "Administrador"
         ? Container(
             padding: EdgeInsets.symmetric(vertical: getProportionateScreenHeight(12.0)),
             child: Row(

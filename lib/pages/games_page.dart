@@ -121,9 +121,13 @@ class _GamesPageState extends State<GamesPage> {
         _drawHeader(game),
         Divider(thickness: 1.2, color: ColorsApp.greyObscured),
         SizedBox(height: getProportionateScreenHeight(8.0)),
-        _drawPlayer(game.jug1, 12, 44),
+        game.ganador == "1"
+            ? _drawWinnerPlayer(game.jug1, game.marcador, game.ganador)
+            : _drawLoserPlayer(game.jug1, game.marcador, game.ganador),
         SizedBox(height: getProportionateScreenHeight(12.0)),
-        _drawPlayer(game.jug2, 33, 12),
+        game.ganador == "2"
+            ? _drawWinnerPlayer(game.jug2, game.marcador, game.ganador)
+            : _drawLoserPlayer(game.jug2, game.marcador, game.ganador),
         SizedBox(height: getProportionateScreenHeight(8.0)),
         Divider(thickness: 1.2, color: ColorsApp.greyObscured),
         _drawOptionDetails(game),
@@ -151,6 +155,8 @@ class _GamesPageState extends State<GamesPage> {
                     MaterialPageRoute(
                       builder: (context) => DetailGamePage(
                         game: game,
+                        idCategoria: widget.idCategory,
+                        typeInfo: widget.typeInfo,
                       ),
                     ),
                   )
@@ -169,15 +175,12 @@ class _GamesPageState extends State<GamesPage> {
     );
   }
 
-  Widget _drawPlayer(String name, int score, int anotherScore) {
-    if (score > anotherScore) {
-      return _drawWinnerPlayer(name, score);
-    } else {
-      return _drawLoserPlayer(name, score);
-    }
-  }
-
-  Widget _drawLoserPlayer(String name, int score) {
+  Widget _drawLoserPlayer(String name, List<dynamic> score, String ganador) {
+    var perdedor;
+    if (ganador == "1")
+      perdedor = "2";
+    else
+      perdedor = "1";
     return Container(
       padding: EdgeInsets.only(
         left: getProportionateScreenWidth(15.0),
@@ -196,16 +199,46 @@ class _GamesPageState extends State<GamesPage> {
               ),
             ],
           ),
-          Text(
-            score.toString(),
-            style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w500),
-          ),
+          score.isEmpty
+              ? Text(
+                  "?",
+                  style: Theme.of(context).textTheme.bodyText1,
+                )
+              : _drawScoreLoser(score, name, perdedor),
         ],
       ),
     );
   }
 
-  Widget _drawWinnerPlayer(String name, int score) {
+  Widget _drawScoreLoser(List<dynamic> score, String name, String player) {
+    String marcador = "";
+    for (var item in score) {
+      if (player == "1")
+        marcador = marcador + "  " + item["jugador_uno"].toString();
+      else
+        marcador = marcador + "  " + item["jugador_dos"].toString();
+    }
+    return Text(
+      marcador,
+      style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w500),
+    );
+  }
+
+  Widget _drawScoreWinner(List<dynamic> score, String name, String player) {
+    String marcador = "";
+    for (var item in score) {
+      if (player == "1")
+        marcador = marcador + "  " + item["jugador_uno"].toString();
+      else
+        marcador = marcador + "  " + item["jugador_dos"].toString();
+    }
+    return Text(
+      marcador,
+      style: Theme.of(context).textTheme.bodyText1,
+    );
+  }
+
+  Widget _drawWinnerPlayer(String name, List<dynamic> score, String ganador) {
     return Container(
       padding: EdgeInsets.only(
         left: getProportionateScreenWidth(15.0),
@@ -221,10 +254,12 @@ class _GamesPageState extends State<GamesPage> {
               _drawWinner(name),
             ],
           ),
-          Text(
-            score.toString(),
-            style: Theme.of(context).textTheme.bodyText1,
-          ),
+          score.isEmpty
+              ? Text(
+                  "?",
+                  style: Theme.of(context).textTheme.bodyText1,
+                )
+              : _drawScoreWinner(score, name, ganador),
         ],
       ),
     );
@@ -281,8 +316,13 @@ class _GamesPageState extends State<GamesPage> {
             style: Theme.of(context).textTheme.bodyText1,
           ),
           Text(
-            game.horaInicio,
-            style: Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50),
+            "Hora " + game.horaInicio,
+            style: game.horaInicioMv == "Hora se mantiene"
+                ? Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50)
+                : Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: ColorsApp.blueObscuredOp50, decoration: TextDecoration.lineThrough),
           ),
         ],
       ),
