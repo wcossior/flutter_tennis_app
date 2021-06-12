@@ -44,7 +44,7 @@ class _DetailGamePageState extends State<DetailGamePage> {
         ),
         child: Stack(children: [_drawContent(context), _loadingIndicator(gameBloc)]),
       ),
-      floatingActionButton: widget.game.partidoTerminado
+      floatingActionButton: partido.partidoTerminado
           ? FloatingActionButton(
               heroTag: "actualizar marcador",
               child: SvgIconsApp.formAdd,
