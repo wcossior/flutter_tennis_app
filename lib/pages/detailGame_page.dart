@@ -1,10 +1,8 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/game_bloc.dart';
 import 'package:flutter_app_tenis/models/game_model.dart';
-import 'package:flutter_app_tenis/models/set_model.dart';
-import 'package:flutter_app_tenis/pages/formNewSet_page.dart';
-import 'package:flutter_app_tenis/pages/formUpdateSet_page.dart';
+import 'package:flutter_app_tenis/pages/fullTime_page.dart';
+import 'package:flutter_app_tenis/pages/updateScore_page.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/styles/svgIcons.dart';
@@ -54,7 +52,7 @@ class _DetailGamePageState extends State<DetailGamePage> {
                 Navigator.of(context)
                     .push(
                   MaterialPageRoute(
-                    builder: (context) => FormNewSetPage(
+                    builder: (context) => UpdateScorePage(
                       game: partido,
                     ),
                   ),
@@ -299,43 +297,27 @@ class _DetailGamePageState extends State<DetailGamePage> {
               fontSize: getProportionateScreenHeight(14.0),
             ),
       ),
-      onPressed: !firstClic
+      onPressed: !partido.partidoTerminado
           ? () {
-              setState(() {
-                firstClic = true;
+             
+              Navigator.of(context)
+                  .push(
+                MaterialPageRoute(
+                  builder: (context) => FullTimePage(
+                    game: partido,
+                  ),
+                ),
+              )
+                  .then((_) async {
+                Game p = await gameBloc.getAGame(widget.idCategoria, widget.game.id, widget.typeInfo);
+                setState(() {
+                  partido = p;
+                });
               });
-              _areYouSureToFinish();
+              // _areYouSureToFinish();
             }
           : null,
     );
-  }
-
-  void _areYouSureToFinish() {
-    AwesomeDialog(
-      context: context,
-      dialogType: DialogType.WARNING,
-      headerAnimationLoop: true,
-      animType: AnimType.BOTTOMSLIDE,
-      showCloseIcon: false,
-      closeIcon: Icon(Icons.close_fullscreen_outlined),
-      title: '¿Finalizar encuentro?',
-      desc: 'Al finalizar el partido se publicará el resultado general',
-      btnOkText: "Si",
-      btnOkColor: ColorsApp.orange,
-      btnCancelText: "No",
-      btnCancelColor: ColorsApp.green,
-      dismissOnTouchOutside: false,
-      btnCancelOnPress: () {
-        setState(() {
-          firstClic = false;
-        });
-      },
-      btnOkOnPress: () async {
-        String text = gameBloc.valueMessage;
-        var mssg = _showMessage(context, text);
-        await mssg.show();
-      },
-    )..show();
   }
 
   Widget _drawSetsResults(BuildContext context) {
@@ -512,90 +494,6 @@ class _DetailGamePageState extends State<DetailGamePage> {
           ),
         ],
       ),
-    );
-  }
-
-  Row _updateSet(Game game, TennisSet setItem) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SvgIconsApp.edit,
-        SizedBox(width: 8.0),
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => FormUpdateSetPage(
-                  game: game,
-                  setTennis: setItem,
-                ),
-              ),
-            );
-            // .then((_) async => gameBloc.getSets(partido.id));
-          },
-          child: Text(
-            "Editar",
-            style: Theme.of(context).textTheme.bodyText1.copyWith(
-                  color: ColorsApp.orange,
-                  fontWeight: FontWeight.w700,
-                ),
-          ),
-        )
-      ],
-    );
-  }
-
-  Row _deleteSet(Game game, TennisSet setItem) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SvgIconsApp.trash,
-        SizedBox(width: 8.0),
-        GestureDetector(
-          onTap: () => _areYouSureToDelete(setItem),
-          child: Text(
-            "Eliminar",
-            style: Theme.of(context).textTheme.bodyText1.copyWith(
-                  color: ColorsApp.orange,
-                  fontWeight: FontWeight.w700,
-                ),
-          ),
-        )
-      ],
-    );
-  }
-
-  void _areYouSureToDelete(TennisSet setItem) {
-    AwesomeDialog(
-        context: context,
-        dialogType: DialogType.WARNING,
-        headerAnimationLoop: true,
-        animType: AnimType.BOTTOMSLIDE,
-        showCloseIcon: false,
-        closeIcon: Icon(Icons.close_fullscreen_outlined),
-        title: 'Eliminar set',
-        desc: '¿Esta seguro de eliminar?',
-        btnOkText: "Si",
-        btnOkColor: ColorsApp.orange,
-        btnCancelText: "No",
-        btnCancelColor: ColorsApp.green,
-        btnCancelOnPress: () {},
-        btnOkOnPress: () async {
-          String text = gameBloc.valueMessage;
-          var mssg = _showMessage(context, text);
-          await mssg.show();
-        })
-      ..show();
-  }
-
-  AwesomeDialog _showMessage(BuildContext context, String mssg) {
-    return AwesomeDialog(
-      context: context,
-      dialogType: mssg.contains("error") ? DialogType.ERROR : DialogType.SUCCES,
-      animType: AnimType.SCALE,
-      title: mssg,
-      desc: "",
-      autoHide: Duration(seconds: 4),
     );
   }
 }

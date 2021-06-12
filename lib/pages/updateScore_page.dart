@@ -7,17 +7,16 @@ import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/utils/keyboard.dart';
 import 'package:flutter_app_tenis/widgets/customButton.dart';
 
-class FormNewSetPage extends StatefulWidget {
+class UpdateScorePage extends StatefulWidget {
   final Game game;
-  Function(Game) callback;
 
-  FormNewSetPage({Key key, this.game, this.callback}) : super(key: key);
+  UpdateScorePage({Key key, this.game}) : super(key: key);
 
   @override
-  _FormNewSetPageState createState() => _FormNewSetPageState();
+  _UpdateScorePageState createState() => _UpdateScorePageState();
 }
 
-class _FormNewSetPageState extends State<FormNewSetPage> {
+class _UpdateScorePageState extends State<UpdateScorePage> {
   GameBloc gameBloc = GameBloc();
 
   final _formKey = GlobalKey<FormState>();
@@ -30,7 +29,7 @@ class _FormNewSetPageState extends State<FormNewSetPage> {
   TextEditingController set3player2Controller = TextEditingController();
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     inicializarCamposDelFormulario();
   }

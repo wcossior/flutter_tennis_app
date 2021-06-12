@@ -41,6 +41,12 @@ class GameBloc extends Validators {
     sinkMessage(data);
     _controllerLoading.sink.add(false);
   }
+  Future fullTime(String idPartido, List<dynamic> marcador) async {
+    _controllerLoading.sink.add(true);
+    String data = await repository.fullTime(idPartido, marcador);
+    sinkMessage(data);
+    _controllerLoading.sink.add(false);
+  }
 
   void filterGames(String text) {
     text = text.toLowerCase();

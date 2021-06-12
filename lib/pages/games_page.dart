@@ -6,6 +6,7 @@ import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/styles/svgIcons.dart';
 import 'package:flutter_app_tenis/widgets/customSurfixIcon.dart';
+import 'package:flutter_app_tenis/utils/keyboard.dart';
 
 class GamesPage extends StatefulWidget {
   final String idCategory;
@@ -150,6 +151,7 @@ class _GamesPageState extends State<GamesPage> {
           SizedBox(width: 8.0),
           GestureDetector(
             onTap: () {
+              KeyboardUtil.hideKeyboard(context);
               return Navigator.of(context)
                   .push(
                     MaterialPageRoute(
