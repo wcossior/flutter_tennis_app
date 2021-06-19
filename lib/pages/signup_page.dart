@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/signup_bloc.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
@@ -17,6 +18,16 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   SignUpBloc signUpBloc = SignUpBloc();
   bool firstClick = false;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  String tokenDispositivo;
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseMessaging.getToken().then((token) {
+      tokenDispositivo = token;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +233,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ? () async {
                       setState(() => firstClick = true);
                       KeyboardUtil.hideKeyboard(context);
-                      String textMessage = await bloc.submit();
+                      String textMessage = await bloc.submit(tokenDispositivo);
                       if (textMessage == "Cuenta creada exitosamente!") {
                         var message = showMessageSignUpSuccessful();
                         await message.show();

@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/login_bloc.dart';
 import 'package:flutter_app_tenis/pages/signup_page.dart';
@@ -19,6 +20,16 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   LoginBloc loginBloc = LoginBloc();
   bool firstClick = false;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  String tokenDispositivo;
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseMessaging.getToken().then((token) {
+      tokenDispositivo = token;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                   ? () async {
                       setState(() => firstClick = true);
                       KeyboardUtil.hideKeyboard(context);
-                      String text = await bloc.submit();
+                      String text = await bloc.submit(tokenDispositivo);
                       if (text != "Inicio exitoso") {
                         var message = _showMessage(context, text);
                         await message.show();

@@ -24,6 +24,8 @@ dependencies:
   firebase_storage: 
   image_picker: ^0.7.4
   carousel_slider: ^3.0.0
+  firebase_messaging: ^5.0.1
+  flutter_local_notifications: ^3.0.1+6
   
 dev_dependencies:
   flutter_test:

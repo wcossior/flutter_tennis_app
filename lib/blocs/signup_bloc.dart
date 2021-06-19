@@ -33,17 +33,17 @@ class SignUpBloc extends Validators {
     _loadingController.close();
   }
 
-  Future<String> submit() {
+  Future<String> submit(String tokenDispositivo) {
     final validEmail = _emailController.value;
     final validCi = _ciController.value;
     final validNombre = _nombreController.value;
     final validPassword = _passwordController.value;
     _loadingController.sink.add(true);
-    return signUp(validCi, validEmail, validNombre, validPassword);
+    return signUp(validCi, validEmail, validNombre, validPassword, tokenDispositivo);
   }
 
-  Future<String> signUp(String ci, String email, String nombre, String password) async {
-    String resp = await repository.signUp(ci, email, nombre, password);
+  Future<String> signUp(String ci, String email, String nombre, String password, String tokenDispositivo) async {
+    String resp = await repository.signUp(ci, email, nombre, password, tokenDispositivo);
     Map decodeData = json.decode(resp);
     if (decodeData["msg"] == "Ocurrio un error") {
       _loadingController.sink.add(false);

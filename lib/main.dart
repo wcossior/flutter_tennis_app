@@ -8,8 +8,10 @@ import 'package:flutter_app_tenis/pages/notifications_page.dart';
 import 'package:flutter_app_tenis/pages/signup_page.dart';
 import 'package:flutter_app_tenis/pages/tournament_page.dart';
 import 'package:flutter_app_tenis/preferences/userPreferences.dart';
+import 'package:flutter_app_tenis/providers/pushnotification_provider.dart';
 import 'package:flutter_app_tenis/styles/theme.dart';
 import 'package:flutter/services.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +21,20 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  
+  @override
+  void initState() {
+    super.initState();
+    final pushProvider = new PushNotificationProvider();
+    pushProvider.initNotifications();
+  }
+
   @override
   Widget build(BuildContext context) {
     authBloc.restoreSession();

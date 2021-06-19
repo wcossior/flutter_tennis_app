@@ -7,8 +7,9 @@ class AuthProvider {
   Future<String> login({
     @required String email,
     @required String password,
+    @required String dispositivo,
   }) async {
-    final authData = {"email": email, "password": password};
+    final authData = {"email": email, "password": password, "dispositivo": dispositivo};
     final url = Uri.https(_url, "/login");
 
     final resp = await http.post(url, body: authData);

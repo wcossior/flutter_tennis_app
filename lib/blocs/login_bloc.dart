@@ -26,15 +26,15 @@ class LoginBloc extends Validators {
     _loadingContoller.close();
   }
 
-  Future<String> submit() {
+  Future<String> submit(String dispositivo) {
     final validEmail = _emailController.value;
     final validPassword = _passwordController.value;
     _loadingContoller.sink.add(true);
-    return login(validEmail, validPassword);
+    return login(validEmail, validPassword, dispositivo);
   }
 
-  Future<String> login(String email, String password) async {
-    String resp = await repository.login(email, password);
+  Future<String> login(String email, String password, String dispositivo) async {
+    String resp = await repository.login(email, password, dispositivo);
     Map decodeData = json.decode(resp);
     _loadingContoller.sink.add(false);
     if (decodeData.containsKey("msg")) {
