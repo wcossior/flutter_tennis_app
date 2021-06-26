@@ -17,10 +17,13 @@ class FullTimePage extends StatefulWidget {
 }
 
 class _FullTimePageState extends State<FullTimePage> {
-    GameBloc gameBloc = GameBloc();
+  GameBloc gameBloc = GameBloc();
 
   final _formKey = GlobalKey<FormState>();
   List<dynamic> marcador = [];
+  bool errorMarcador1erSet = false;
+  bool errorMarcador2doSet = false;
+  bool errorMarcador3erSet = false;
   TextEditingController set1player1Controller = TextEditingController();
   TextEditingController set1player2Controller = TextEditingController();
   TextEditingController set2player1Controller = TextEditingController();
@@ -127,100 +130,136 @@ class _FullTimePageState extends State<FullTimePage> {
   }
 
   Widget _drawFieldScore1(GameBloc bloc) {
-    return Row(children: [
-      Expanded(
-        child: TextFormField(
-          controller: set1player1Controller,
-          keyboardType: TextInputType.number,
-          validator: (value) => _validateNumber(value),
-          decoration: InputDecoration(
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            labelText: '1er set',
-            hintText: 'Ej: 6',
+    return Column(
+      children: [
+        Row(children: [
+          Expanded(
+            child: TextFormField(
+              controller: set1player1Controller,
+              keyboardType: TextInputType.number,
+              validator: (value) => _validateNumber(value),
+              decoration: InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                labelText: '1er set',
+                hintText: 'Ej: 6',
+              ),
+            ),
           ),
-        ),
-      ),
-      SizedBox(width: getProportionateScreenWidth(30.0)),
-      Expanded(
-        child: TextFormField(
-          controller: set1player2Controller,
-          keyboardType: TextInputType.number,
-          validator: (value) => _validateNumber(value),
-          decoration: InputDecoration(
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            labelText: '1er set',
-            hintText: 'Ej: 0',
+          SizedBox(width: getProportionateScreenWidth(30.0)),
+          Expanded(
+            child: TextFormField(
+              controller: set1player2Controller,
+              keyboardType: TextInputType.number,
+              validator: (value) => _validateNumber(value),
+              decoration: InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                labelText: '1er set',
+                hintText: 'Ej: 0',
+              ),
+            ),
           ),
-        ),
-      ),
-    ]);
+        ]),
+        if (errorMarcador1erSet)
+          Padding(
+            padding: EdgeInsets.only(top: getProportionateScreenHeight(8.0)),
+            child: Text(
+              "Error en marcador del 1er set",
+              style: Theme.of(context).textTheme.caption.copyWith(color: Colors.red[900]),
+            ),
+          ),
+      ],
+    );
   }
 
   Widget _drawFieldScore2(GameBloc bloc) {
-    return Row(children: [
-      Expanded(
-        child: TextFormField(
-          controller: set2player1Controller,
-          keyboardType: TextInputType.number,
-          validator: (value) => _validateNumber(value),
-          decoration: InputDecoration(
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            labelText: '2do set',
-            hintText: 'Ej: 0',
+    return Column(
+      children: [
+        Row(children: [
+          Expanded(
+            child: TextFormField(
+              controller: set2player1Controller,
+              keyboardType: TextInputType.number,
+              validator: (value) => _validateNumber(value),
+              decoration: InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                labelText: '2do set',
+                hintText: 'Ej: 0',
+              ),
+            ),
           ),
-        ),
-      ),
-      SizedBox(width: getProportionateScreenWidth(30.0)),
-      Expanded(
-        child: TextFormField(
-          controller: set2player2Controller,
-          keyboardType: TextInputType.number,
-          validator: (value) => _validateNumber(value),
-          decoration: InputDecoration(
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            labelText: '2do set',
-            hintText: 'Ej: 6',
+          SizedBox(width: getProportionateScreenWidth(30.0)),
+          Expanded(
+            child: TextFormField(
+              controller: set2player2Controller,
+              keyboardType: TextInputType.number,
+              validator: (value) => _validateNumber(value),
+              decoration: InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                labelText: '2do set',
+                hintText: 'Ej: 6',
+              ),
+            ),
           ),
-        ),
-      ),
-    ]);
+        ]),
+        if (errorMarcador2doSet)
+          Padding(
+            padding: EdgeInsets.only(top: getProportionateScreenHeight(8.0)),
+            child: Text(
+              "Error en marcador del 2do set",
+              style: Theme.of(context).textTheme.caption.copyWith(color: Colors.red[900]),
+            ),
+          ),
+      ],
+    );
   }
 
   Widget _drawFieldScore3(GameBloc bloc) {
-    return Row(children: [
-      Expanded(
-        child: TextFormField(
-          controller: set3player1Controller,
-          keyboardType: TextInputType.number,
-          validator: (value) => _validateNumberOrEmpty(value),
-          decoration: InputDecoration(
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            labelText: '3er set',
-            hintText: 'Ej: 6',
+    return Column(
+      children: [
+        Row(children: [
+          Expanded(
+            child: TextFormField(
+              controller: set3player1Controller,
+              keyboardType: TextInputType.number,
+              validator: (value) => _validateNumberOrEmpty(value),
+              decoration: InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                labelText: '3er set',
+                hintText: 'Ej: 6',
+              ),
+            ),
           ),
-        ),
-      ),
-      SizedBox(width: getProportionateScreenWidth(30.0)),
-      Expanded(
-        child: TextFormField(
-          controller: set3player2Controller,
-          keyboardType: TextInputType.number,
-          validator: (value) => _validateNumberOrEmpty(value),
-          decoration: InputDecoration(
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            labelText: '3er set',
-            hintText: 'Ej: 0',
+          SizedBox(width: getProportionateScreenWidth(30.0)),
+          Expanded(
+            child: TextFormField(
+              controller: set3player2Controller,
+              keyboardType: TextInputType.number,
+              validator: (value) => _validateNumberOrEmpty(value),
+              decoration: InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                labelText: '3er set',
+                hintText: 'Ej: 0',
+              ),
+            ),
           ),
-        ),
-      ),
-    ]);
+        ]),
+        if (errorMarcador3erSet)
+          Padding(
+            padding: EdgeInsets.only(top: getProportionateScreenHeight(8.0)),
+            child: Text(
+              "Error en marcador del 3er set",
+              style: Theme.of(context).textTheme.caption.copyWith(color: Colors.red[900]),
+            ),
+          ),
+      ],
+    );
   }
 
   String _validateNumber(String value) {
     Pattern pattern = r'^[0-9]*$';
     RegExp regExp = new RegExp(pattern);
     if (value == null || value.isEmpty || !regExp.hasMatch(value)) {
-      return 'Número invalido';
+      return 'Incorrecto';
     }
     return null;
   }
@@ -229,9 +268,37 @@ class _FullTimePageState extends State<FullTimePage> {
     Pattern pattern = r'^[0-9]*$';
     RegExp regExp = new RegExp(pattern);
     if (!regExp.hasMatch(value)) {
-      return 'Número invalido';
+      return 'Incorrecto';
     }
     return null;
+  }
+
+  bool _verificarMarcadorCorrecto(Map<String, int> marcadorSet) {
+    List<dynamic> marcadoresCorrectos = [
+      {"jugador_uno": 6, "jugador_dos": 0},
+      {"jugador_uno": 6, "jugador_dos": 1},
+      {"jugador_uno": 6, "jugador_dos": 2},
+      {"jugador_uno": 6, "jugador_dos": 3},
+      {"jugador_uno": 6, "jugador_dos": 4},
+      {"jugador_uno": 7, "jugador_dos": 5},
+      {"jugador_uno": 7, "jugador_dos": 6},
+      {"jugador_uno": 0, "jugador_dos": 6},
+      {"jugador_uno": 1, "jugador_dos": 6},
+      {"jugador_uno": 2, "jugador_dos": 6},
+      {"jugador_uno": 3, "jugador_dos": 6},
+      {"jugador_uno": 4, "jugador_dos": 6},
+      {"jugador_uno": 5, "jugador_dos": 7},
+      {"jugador_uno": 6, "jugador_dos": 7},
+    ];
+    bool esCorrecto = false;
+
+    for (var marcadorCorrecto in marcadoresCorrectos) {
+      if (marcadorCorrecto["jugador_uno"] == marcadorSet["jugador_uno"] &&
+          marcadorCorrecto["jugador_dos"] == marcadorSet["jugador_dos"]) {
+        esCorrecto = true;
+      }
+    }
+    return esCorrecto;
   }
 
   Widget _drawButtonSave(GameBloc bloc) {
@@ -243,31 +310,74 @@ class _FullTimePageState extends State<FullTimePage> {
       onPressed: () async {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
-
           var primerSet = {
             "jugador_uno": int.parse(set1player1Controller.text),
             "jugador_dos": int.parse(set1player2Controller.text),
           };
-          marcador.add(primerSet);
+          if (!_verificarMarcadorCorrecto(primerSet)) {
+            setState(() {
+              errorMarcador1erSet = true;
+            });
+          } else {
+            setState(() {
+              errorMarcador1erSet = false;
+            });
+          }
           var segundoSet = {
             "jugador_uno": int.parse(set2player1Controller.text),
             "jugador_dos": int.parse(set2player2Controller.text),
           };
-          marcador.add(segundoSet);
-
+          if (!_verificarMarcadorCorrecto(segundoSet)) {
+            setState(() {
+              errorMarcador2doSet = true;
+            });
+          } else {
+            setState(() {
+              errorMarcador2doSet = false;
+            });
+          }
+          var tercerSet;
           if (set3player1Controller.text != "" && set3player2Controller.text != "") {
-            var tercerSet = {
+            tercerSet = {
               "jugador_uno": int.parse(set3player1Controller.text),
               "jugador_dos": int.parse(set3player2Controller.text),
             };
-            marcador.add(tercerSet);
+            if (!_verificarMarcadorCorrecto(tercerSet)) {
+              setState(() {
+                errorMarcador3erSet = true;
+              });
+            } else {
+              setState(() {
+                errorMarcador3erSet = false;
+              });
+            }
           }
-          KeyboardUtil.hideKeyboard(context);
-          await bloc.fullTime(widget.game.id, marcador);
-          String text = bloc.valueMessage;
-          var mssg = _showMessage(context, text);
-          await mssg.show();
-          Navigator.pop(context);
+          if (!errorMarcador1erSet && !errorMarcador2doSet) {
+            if (set3player1Controller.text != "" && set3player2Controller.text != "") {
+              if (!errorMarcador3erSet) {
+                marcador.add(primerSet);
+                marcador.add(segundoSet);
+                marcador.add(tercerSet);
+                print(marcador);
+                KeyboardUtil.hideKeyboard(context);
+                await bloc.fullTime(widget.game.id, marcador);
+                String text = bloc.valueMessage;
+                var mssg = _showMessage(context, text);
+                await mssg.show();
+                Navigator.pop(context);
+              }
+            } else {
+              marcador.add(primerSet);
+              marcador.add(segundoSet);
+              print(marcador);
+              KeyboardUtil.hideKeyboard(context);
+              await bloc.fullTime(widget.game.id, marcador);
+              String text = bloc.valueMessage;
+              var mssg = _showMessage(context, text);
+              await mssg.show();
+              Navigator.pop(context);
+            }
+          }
         }
       },
     );
