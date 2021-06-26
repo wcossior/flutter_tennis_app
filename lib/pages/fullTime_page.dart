@@ -358,7 +358,6 @@ class _FullTimePageState extends State<FullTimePage> {
                 marcador.add(primerSet);
                 marcador.add(segundoSet);
                 marcador.add(tercerSet);
-                print(marcador);
                 KeyboardUtil.hideKeyboard(context);
                 await bloc.fullTime(widget.game.id, marcador);
                 String text = bloc.valueMessage;
@@ -369,7 +368,6 @@ class _FullTimePageState extends State<FullTimePage> {
             } else {
               marcador.add(primerSet);
               marcador.add(segundoSet);
-              print(marcador);
               KeyboardUtil.hideKeyboard(context);
               await bloc.fullTime(widget.game.id, marcador);
               String text = bloc.valueMessage;

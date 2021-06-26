@@ -18,7 +18,7 @@ class _BottomSliderState extends State<BottomSlider> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.screenHeight * 0.22,
+      height: SizeConfig.screenHeight * 0.24,
       child: Column(
         children: [
           _drawSlider(context),
