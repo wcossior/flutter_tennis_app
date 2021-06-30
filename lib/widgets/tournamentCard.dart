@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/models/tournament_model.dart';
 import 'package:flutter_app_tenis/pages/categories_page.dart';
-import 'package:flutter_app_tenis/pages/scheduling_page.dart';
+import 'package:flutter_app_tenis/pages/schedulingByCategories_page.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
 import 'package:flutter_app_tenis/styles/svgIcons.dart';
@@ -83,7 +83,7 @@ class TournamentCard extends StatelessWidget {
         GestureDetector(
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => SchedulingPage(
+              builder: (context) => SchedulingByCategoriesPage(
                 idTournament: idTournament,
               ),
             ),

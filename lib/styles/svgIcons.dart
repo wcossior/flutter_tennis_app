@@ -49,7 +49,8 @@ class SvgIconsApp {
   );
 
   static var winner = ClipRRect(
-    borderRadius: BorderRadius.only(topLeft: Radius.circular(7.0), bottomRight: Radius.circular(7.0)),
+    borderRadius:
+        BorderRadius.only(topLeft: Radius.circular(7.0), bottomRight: Radius.circular(7.0)),
     child: SvgPicture.asset(
       'assets/icons/Winner.svg',
       fit: BoxFit.cover,
@@ -223,7 +224,6 @@ class SvgIconsApp {
       color: ColorsApp.blueObscured,
     ),
   );
- 
 
   static var playoffs = Container(
     height: getProportionateScreenHeight(25.0),
@@ -259,5 +259,12 @@ class SvgIconsApp {
       'assets/icons/Logout.svg',
       color: ColorsApp.blueObscured,
     ),
+  );
+
+  static var racket = Image.asset(
+    'assets/images/racket.png',
+    width: getProportionateScreenWidth(50.0),
+    height: getProportionateScreenHeight(50.0),
+    fit: BoxFit.cover,
   );
 }

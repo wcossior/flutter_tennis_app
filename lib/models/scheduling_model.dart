@@ -13,6 +13,7 @@ class Scheduling {
 class Event {
   String id;
   String cancha;
+  String categoria;
   String horaInicio;
   String horaInicioMviborita;
   String horaFin;
@@ -24,6 +25,7 @@ class Event {
   Event({
     this.id,
     this.cancha,
+    this.categoria,
     this.horaInicio,
     this.horaInicioMviborita,
     this.horaFin,
@@ -36,6 +38,7 @@ class Event {
   Event.fromJsonMap(Map<String, dynamic> json) {
     id = json["id"];
     cancha = json["numero_cancha"].toString();
+    categoria = json["nombre"];
     horaInicio =  formatDate(json["hora_inicio"]);
     horaInicioMviborita = json["hora_inico_mv"]!=null ? formatDate(json["hora_inico_mv"]) : "Se mantiene";
     horaFin = json["hora_fin"]!=null ? formatDate(json["hora_fin"]) : "Sin definir";

@@ -34,9 +34,14 @@ class _SchedulingCardState extends State<SchedulingCard> {
         _drawHeaderCard(event),
         Divider(thickness: 1.2, color: ColorsApp.greyObscured),
         SizedBox(height: getProportionateScreenHeight(8.0)),
+        Text(
+          event.categoria,
+          style: Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50),
+        ),
+        SizedBox(height: getProportionateScreenHeight(8.0)),
         _drawPlayers(event),
         SizedBox(height: getProportionateScreenHeight(8.0)),
-       _drawStatusEvent(event.partidoTerminado),
+        _drawStatusEvent(event.partidoTerminado),
         SizedBox(height: getProportionateScreenHeight(8.0)),
       ],
     );
@@ -140,7 +145,10 @@ class _SchedulingCardState extends State<SchedulingCard> {
             children: [
               Text(
                 "Cambio de hora: ",
-                style: Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: ColorsApp.blueObscuredOp50),
               ),
               Text(
                 event.horaInicioMviborita,
@@ -150,7 +158,8 @@ class _SchedulingCardState extends State<SchedulingCard> {
           ),
           Text(
             "Cancha " + event.cancha,
-            style: Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50),
+            style:
+                Theme.of(context).textTheme.bodyText1.copyWith(color: ColorsApp.blueObscuredOp50),
           ),
         ],
       ),

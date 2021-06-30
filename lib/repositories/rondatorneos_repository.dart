@@ -20,6 +20,5 @@ class RondaTorneosRepository {
       rondasPorFecha.add(fecha);
     }
     rondasPorFecha = rondasPorFecha.toSet().toList();
-    print("===================${rondasPorFecha.toSet().toList()}====================");
   }
 }

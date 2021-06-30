@@ -36,6 +36,7 @@ flutter:
     - assets/icons/
     - assets/images/LoadingImg.gif
     - assets/images/DefaultImg.jpg
+    - assets/images/racket.png
   fonts:
     - family: Transat
       fonts:

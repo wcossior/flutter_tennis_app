@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/scheduling_bloc.dart';
-import 'package:flutter_app_tenis/models/rondatorneo_model.dart';
 import 'package:flutter_app_tenis/models/scheduling_model.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
@@ -10,7 +9,11 @@ import 'package:flutter_app_tenis/widgets/schedulingCard.dart';
 
 class SchedulingPage extends StatefulWidget {
   final String idTournament;
-  const SchedulingPage({Key key, this.idTournament}) : super(key: key);
+  final String category;
+  final List<String> options;
+  final List<Event> scheduling;
+  const SchedulingPage({Key key, this.idTournament, this.category, this.options, this.scheduling})
+      : super(key: key);
 
   @override
   _SchedulingPageState createState() => _SchedulingPageState();
@@ -23,8 +26,9 @@ class _SchedulingPageState extends State<SchedulingPage> {
 
   @override
   void initState() {
-    schedulingBloc.getRondaTorneos(widget.idTournament);
-    schedulingBloc.getScheduling(widget.idTournament);
+    schedulingBloc.sinkScheduling(widget.scheduling);
+    schedulingBloc.sinkOptions(widget.options);
+    schedulingBloc.getSchedulingByCategory(widget.category);
     super.initState();
   }
 
@@ -44,8 +48,12 @@ class _SchedulingPageState extends State<SchedulingPage> {
     return StreamBuilder(
       stream: schedulingBloc.streamScheduling,
       builder: (context, snapshot) {
-        if (schedulingBloc.schedulingAllEvents.isNotEmpty && snapshot.data.isEmpty) {
-          return Center(child: Text("Sin resultados"));
+        // if (schedulingBloc.schedulingAllEvents.isNotEmpty && snapshot.data.isEmpty) {
+        if (snapshot.hasData && snapshot.data.isEmpty) {
+          if (schedulingBloc.schedulingByCategory.isNotEmpty)
+            return Center(child: Text("Sin resultados"));
+          else
+            return Container();
         } else {
           return Container();
         }
@@ -54,7 +62,7 @@ class _SchedulingPageState extends State<SchedulingPage> {
   }
 
   Widget _searchBar() {
-    return schedulingBloc.schedulingAllEvents.isNotEmpty
+    return schedulingBloc.schedulingByCategory.isNotEmpty
         ? Column(
             children: [
               StreamBuilder(
@@ -64,7 +72,6 @@ class _SchedulingPageState extends State<SchedulingPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
                       controller: searchController,
-                      maxLength: 20,
                       decoration: InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                         suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Search.svg"),
@@ -85,31 +92,32 @@ class _SchedulingPageState extends State<SchedulingPage> {
                 },
               ),
               StreamBuilder(
-                  stream: schedulingBloc.streamOptions,
-                  builder: (context, snapshot) {
-                    List<String> options = snapshot.data;
-                    if (options != null && options.isNotEmpty) {
-                      return DropdownButton(
-                        items: options.map((value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        value: currentOption,
-                        onChanged: (selectedItem) {
-                          setState(() {
-                            currentOption = selectedItem;
-                          });
-                          schedulingBloc.filterEventsByDate(currentOption);
-                          if (searchController.text != "" && selectedItem == "Todo")
-                            schedulingBloc.filterEvents(searchController.text);
-                        },
-                      );
-                    } else {
-                      return Container();
-                    }
-                  })
+                stream: schedulingBloc.streamOptions,
+                builder: (context, snapshot) {
+                  List<String> options = snapshot.data;
+                  if (options != null && options.isNotEmpty) {
+                    return DropdownButton(
+                      items: options.map((value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      value: currentOption,
+                      onChanged: (selectedItem) {
+                        setState(() {
+                          currentOption = selectedItem;
+                        });
+                        schedulingBloc.filterEventsByDate(currentOption);
+                        if (searchController.text != "" && selectedItem == "Todo")
+                          schedulingBloc.filterEvents(searchController.text);
+                      },
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
             ],
           )
         : Container();
@@ -129,7 +137,7 @@ class _SchedulingPageState extends State<SchedulingPage> {
   }
 
   Widget _drawEvents(List<Event> data) {
-    return data.isEmpty && schedulingBloc.schedulingAllEvents.isEmpty
+    return data.isEmpty && schedulingBloc.schedulingByCategory.isEmpty
         ? Center(child: Text("No hay programación"))
         : ListView.builder(
             padding: EdgeInsets.only(
