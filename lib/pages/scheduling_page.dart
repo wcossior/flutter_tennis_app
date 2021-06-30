@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_tenis/blocs/scheduling_bloc.dart';
+import 'package:flutter_app_tenis/models/rondatorneo_model.dart';
 import 'package:flutter_app_tenis/models/scheduling_model.dart';
 import 'package:flutter_app_tenis/styles/colors.dart';
 import 'package:flutter_app_tenis/styles/size_config.dart';
@@ -17,9 +18,12 @@ class SchedulingPage extends StatefulWidget {
 
 class _SchedulingPageState extends State<SchedulingPage> {
   SchedulingBloc schedulingBloc = SchedulingBloc();
+  String currentOption = 'Todo';
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
+    schedulingBloc.getRondaTorneos(widget.idTournament);
     schedulingBloc.getScheduling(widget.idTournament);
     super.initState();
   }
@@ -51,25 +55,62 @@ class _SchedulingPageState extends State<SchedulingPage> {
 
   Widget _searchBar() {
     return schedulingBloc.schedulingAllEvents.isNotEmpty
-        ? StreamBuilder(
-            stream: schedulingBloc.streamScheduling,
-            builder: (context, snapshot) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  maxLength: 20,
-                  decoration: InputDecoration(
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Search.svg"),
-                    labelText: "Buscador",
-                    hintText: 'Nombre del jugador',
-                  ),
-                  onChanged: (text) {
-                    schedulingBloc.filterEvents(text);
-                  },
-                ),
-              );
-            },
+        ? Column(
+            children: [
+              StreamBuilder(
+                stream: schedulingBloc.streamScheduling,
+                builder: (context, snapshot) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: searchController,
+                      maxLength: 20,
+                      decoration: InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Search.svg"),
+                        labelText: "Buscador",
+                        hintText: 'Nombre del jugador',
+                      ),
+                      onChanged: (text) {
+                        schedulingBloc.filterEvents(text);
+                        if (text == "") {
+                          setState(() {
+                            currentOption = "Todo";
+                          });
+                          schedulingBloc.noFilterEventsByDate();
+                        }
+                      },
+                    ),
+                  );
+                },
+              ),
+              StreamBuilder(
+                  stream: schedulingBloc.streamOptions,
+                  builder: (context, snapshot) {
+                    List<String> options = snapshot.data;
+                    if (options != null && options.isNotEmpty) {
+                      return DropdownButton(
+                        items: options.map((value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        value: currentOption,
+                        onChanged: (selectedItem) {
+                          setState(() {
+                            currentOption = selectedItem;
+                          });
+                          schedulingBloc.filterEventsByDate(currentOption);
+                          if (searchController.text != "" && selectedItem == "Todo")
+                            schedulingBloc.filterEvents(searchController.text);
+                        },
+                      );
+                    } else {
+                      return Container();
+                    }
+                  })
+            ],
           )
         : Container();
   }
@@ -129,7 +170,10 @@ class _SchedulingPageState extends State<SchedulingPage> {
             '${event.horaInicio}',
             style: event.horaInicioMviborita == "Se mantiene"
                 ? Theme.of(context).textTheme.subtitle2
-                : Theme.of(context).textTheme.subtitle2.copyWith(decoration: TextDecoration.lineThrough),
+                : Theme.of(context)
+                    .textTheme
+                    .subtitle2
+                    .copyWith(decoration: TextDecoration.lineThrough),
           ),
         ],
       ),
