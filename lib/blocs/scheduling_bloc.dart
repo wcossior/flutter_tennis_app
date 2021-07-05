@@ -97,12 +97,20 @@ class SchedulingBloc {
       if (filteredByName) {
         dataGamesForDisplay = schedulingEventsByName.where((event) {
           var horaInicio = event.horaInicio;
-          return horaInicio == text;
+          var fecha = event.horaInicio.substring(0, event.horaInicio.length - 7);
+          if (text == fecha)
+            return fecha == text;
+          else
+            return horaInicio == text;
         }).toList();
       } else {
         dataGamesForDisplay = schedulingByCategory.where((event) {
           var horaInicio = event.horaInicio;
-          return horaInicio == text;
+          var fecha = event.horaInicio.substring(0, event.horaInicio.length - 7);
+          if (text == fecha)
+            return fecha == text;
+          else
+            return horaInicio == text;
         }).toList();
       }
       schedulingEventsByDate = dataGamesForDisplay;

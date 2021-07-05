@@ -41,7 +41,7 @@ class Tournament {
     numeroCanchas = json["numero_canchas"];
   }
 
-  String formatDate(dateWithoutFormat) {
+  String formatDate(String dateWithoutFormat) {
     DateTime date = DateTime.parse(dateWithoutFormat);
     int month = date.month;
     int day = date.day;

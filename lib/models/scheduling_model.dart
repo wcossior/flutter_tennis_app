@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Scheduling {
   List<Event> items = [];
   Scheduling();
@@ -48,10 +50,12 @@ class Event {
     partidoTerminado = json["partido_terminado"]??false;
   }
 
-    String formatDate(dateWithoutFormat) {
+    String formatDate(String dateWithoutFormat) {
     DateTime date = DateTime.parse(dateWithoutFormat);
     String day = date.day.toString();
     String month = getNameMonthToEsp(date.month);
+    String nameDay = DateFormat('EEEE').format(date);
+    String dayEsp = getNameDayToEsp(nameDay);
     String hour = date.hour.toString();
     String minutes = date.minute.toString();
     if (date.hour < 10) {
@@ -61,7 +65,7 @@ class Event {
       minutes = "0" + minutes;
     }
 
-    String formatedDate = "$day $month, $hour:$minutes";
+    String formatedDate = "$dayEsp $day de $month, $hour:$minutes";
 
     return formatedDate;
   }
@@ -82,5 +86,34 @@ class Event {
       "Dic",
     ];
     return months[month - 1];
+  }
+
+    String getNameDayToEsp(String dayEng) {
+    String dayEsp;
+
+    switch (dayEng) {
+      case "Monday":
+        dayEsp = "Lunes";
+        break;
+      case "Tuesday":
+        dayEsp = "Martes";
+        break;
+      case "Wednesday":
+        dayEsp = "Miércoles";
+        break;
+      case "Thursday":
+        dayEsp = "Jueves";
+        break;
+      case "Friday":
+        dayEsp = "Viernes";
+        break;
+      case "Saturday":
+        dayEsp = "Sabado";
+        break;
+      case "Sunday":
+        dayEsp = "Domingo";
+        break;
+    }
+    return dayEsp;
   }
 }

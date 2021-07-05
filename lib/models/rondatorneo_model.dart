@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class RondaTorneos {
   List<RondaTorneo> items = [];
   RondaTorneos();
@@ -15,6 +17,7 @@ class RondaTorneo {
   String numero;
   String horaInicio;
   String torneoId;
+  String soloFecha;
 
   RondaTorneo({
     this.id,
@@ -27,14 +30,28 @@ class RondaTorneo {
     id = json["id"];
     numero = json["numero"].toString();
     horaInicio = formatDate(json["hora_inicio"]);
+    soloFecha = formatOnlyDate(json["hora_inicio"]);
     torneoId = json["torneo_id"];
   }
 
-
-   String formatDate(dateWithoutFormat) {
+  String formatOnlyDate(String dateWithoutFormat){
     DateTime date = DateTime.parse(dateWithoutFormat);
     String day = date.day.toString();
     String month = getNameMonthToEsp(date.month);
+    String nameDay = DateFormat('EEEE').format(date);
+    String dayEsp = getNameDayToEsp(nameDay);
+
+    String formatedDate = "$dayEsp $day de $month";
+
+    return formatedDate;
+  }
+
+  String formatDate(String dateWithoutFormat) {
+    DateTime date = DateTime.parse(dateWithoutFormat);
+    String day = date.day.toString();
+    String month = getNameMonthToEsp(date.month);
+    String nameDay = DateFormat('EEEE').format(date);
+    String dayEsp = getNameDayToEsp(nameDay);
     String hour = date.hour.toString();
     String minutes = date.minute.toString();
     if (date.hour < 10) {
@@ -44,12 +61,12 @@ class RondaTorneo {
       minutes = "0" + minutes;
     }
 
-    String formatedDate = "$day $month, $hour:$minutes";
+    String formatedDate = "$dayEsp $day de $month, $hour:$minutes";
 
     return formatedDate;
   }
 
- String getNameMonthToEsp(int month) {
+  String getNameMonthToEsp(int month) {
     List<String> months = [
       "Ene",
       "Feb",
@@ -65,5 +82,34 @@ class RondaTorneo {
       "Dic",
     ];
     return months[month - 1];
+  }
+
+  String getNameDayToEsp(String dayEng) {
+    String dayEsp;
+
+    switch (dayEng) {
+      case "Monday":
+        dayEsp = "Lunes";
+        break;
+      case "Tuesday":
+        dayEsp = "Martes";
+        break;
+      case "Wednesday":
+        dayEsp = "Miércoles";
+        break;
+      case "Thursday":
+        dayEsp = "Jueves";
+        break;
+      case "Friday":
+        dayEsp = "Viernes";
+        break;
+      case "Saturday":
+        dayEsp = "Sabado";
+        break;
+      case "Sunday":
+        dayEsp = "Domingo";
+        break;
+    }
+    return dayEsp;
   }
 }

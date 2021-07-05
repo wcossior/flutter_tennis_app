@@ -16,9 +16,13 @@ class RondaTorneosRepository {
     // var now = DateTime.now();
     // var today = DateTime(now.year, now.month, now.day);
     for (RondaTorneo item in rondas) {
-      var fecha = item.horaInicio;
+      var fechaYhora = item.horaInicio;
+      var fecha = item.soloFecha;
       rondasPorFecha.add(fecha);
+      rondasPorFecha.add(fechaYhora);
     }
     rondasPorFecha = rondasPorFecha.toSet().toList();
   }
+
+
 }
