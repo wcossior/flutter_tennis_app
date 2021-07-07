@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'dart:convert';
 
 class Scheduling {
   List<Event> items = [];
@@ -23,6 +24,8 @@ class Event {
   String rondaTorneoId;
   String jugador2;
   bool partidoTerminado;
+  List<dynamic> marcador = [];
+  String ganador;
 
   Event({
     this.id,
@@ -35,22 +38,53 @@ class Event {
     this.rondaTorneoId,
     this.jugador2,
     this.partidoTerminado,
+    this.marcador,
+    this.ganador,
   });
 
   Event.fromJsonMap(Map<String, dynamic> json) {
     id = json["id"];
     cancha = json["numero_cancha"].toString();
     categoria = json["nombre"];
-    horaInicio =  formatDate(json["hora_inicio"]);
-    horaInicioMviborita = json["hora_inico_mv"]!=null ? formatDate(json["hora_inico_mv"]) : "Se mantiene";
-    horaFin = json["hora_fin"]!=null ? formatDate(json["hora_fin"]) : "Sin definir";
+    horaInicio = formatDate(json["hora_inicio"]);
+    horaInicioMviborita =
+        json["hora_inico_mv"] != null ? formatDate(json["hora_inico_mv"]) : "Se mantiene";
+    horaFin = json["hora_fin"] != null ? formatDate(json["hora_fin"]) : "Sin definir";
     jugador1 = json["jug1"];
     rondaTorneoId = json["ronda_torneo_id"];
     jugador2 = json["jug2"];
-    partidoTerminado = json["partido_terminado"]??false;
+    partidoTerminado = json["partido_terminado"] ?? false;
+    if (json["marcador"] != null) decodeJson(json["marcador"]);
+    if (json["marcador"] != null) ganador = obtenerGanador(json["marcador"]).toString();
   }
 
-    String formatDate(String dateWithoutFormat) {
+  void decodeJson(String data) {
+    var mapData = json.decode(data);
+
+    for (var item in mapData) {
+      marcador.add(item);
+    }
+  }
+
+  int obtenerGanador(String data) {
+    int marcadorJug1 = 0;
+    int marcadorJug2 = 0;
+    var mapData = json.decode(data);
+
+    for (var item in mapData) {
+      if (item["jugador_uno"] > item["jugador_dos"])
+        marcadorJug1++;
+      if (item["jugador_uno"] < item["jugador_dos"])
+        marcadorJug2++;
+    }
+
+    if (marcadorJug1 > marcadorJug2) {
+      return 1;
+    } else
+      return 2;
+  }
+
+  String formatDate(String dateWithoutFormat) {
     DateTime date = DateTime.parse(dateWithoutFormat);
     String day = date.day.toString();
     String month = getNameMonthToEsp(date.month);
@@ -88,7 +122,7 @@ class Event {
     return months[month - 1];
   }
 
-    String getNameDayToEsp(String dayEng) {
+  String getNameDayToEsp(String dayEng) {
     String dayEsp;
 
     switch (dayEng) {

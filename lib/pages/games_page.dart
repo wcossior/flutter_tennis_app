@@ -206,13 +206,13 @@ class _GamesPageState extends State<GamesPage> {
                   "?",
                   style: Theme.of(context).textTheme.bodyText1,
                 )
-              : _drawScoreLoser(score, name, perdedor),
+              : _drawScoreLoser(score, perdedor),
         ],
       ),
     );
   }
 
-  Widget _drawScoreLoser(List<dynamic> score, String name, String player) {
+  Widget _drawScoreLoser(List<dynamic> score, String player) {
     String marcador = "";
     for (var item in score) {
       if (player == "1")
@@ -226,7 +226,7 @@ class _GamesPageState extends State<GamesPage> {
     );
   }
 
-  Widget _drawScoreWinner(List<dynamic> score, String name, String player) {
+  Widget _drawScoreWinner(List<dynamic> score, String player) {
     String marcador = "";
     for (var item in score) {
       if (player == "1")
@@ -261,7 +261,7 @@ class _GamesPageState extends State<GamesPage> {
                   "?",
                   style: Theme.of(context).textTheme.bodyText1,
                 )
-              : _drawScoreWinner(score, name, ganador),
+              : _drawScoreWinner(score, ganador),
         ],
       ),
     );

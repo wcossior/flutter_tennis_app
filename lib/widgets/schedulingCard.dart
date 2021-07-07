@@ -13,10 +13,21 @@ class SchedulingCard extends StatefulWidget {
 }
 
 class _SchedulingCardState extends State<SchedulingCard> {
+  bool terminadoColor;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      terminadoColor = widget.event.partidoTerminado;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.only(bottom: getProportionateScreenHeight(18.0)),
+      color: terminadoColor==true?ColorsApp.greyObscured:Colors.white,
       elevation: 4.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -41,9 +52,76 @@ class _SchedulingCardState extends State<SchedulingCard> {
         SizedBox(height: getProportionateScreenHeight(8.0)),
         _drawPlayers(event),
         SizedBox(height: getProportionateScreenHeight(8.0)),
+        _drawScorePlayers(event),
+        SizedBox(height: getProportionateScreenHeight(8.0)),
         _drawStatusEvent(event.partidoTerminado),
         SizedBox(height: getProportionateScreenHeight(8.0)),
       ],
+    );
+  }
+
+  Row _drawScorePlayers(Event event) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        event.ganador == "1"
+            ? _drawScoreWinnerPlayer(event.marcador, event.ganador)
+            : _drawScoreLoserPlayer(event.marcador, event.ganador),
+        event.ganador == "2"
+            ? _drawScoreWinnerPlayer(event.marcador, event.ganador)
+            : _drawScoreLoserPlayer(event.marcador, event.ganador),
+      ],
+    );
+  }
+
+  Widget _drawScoreLoserPlayer(List<dynamic> score, String ganador) {
+    var perdedor;
+    if (ganador == "1")
+      perdedor = "2";
+    else
+      perdedor = "1";
+    return score.isEmpty
+        ? Text(
+            "?",
+            style: Theme.of(context).textTheme.bodyText1,
+          )
+        : _drawScoreLoser(score, perdedor);
+  }
+
+  Widget _drawScoreWinnerPlayer(List<dynamic> score, String ganador) {
+    return score.isEmpty
+        ? Text(
+            "?",
+            style: Theme.of(context).textTheme.bodyText1,
+          )
+        : _drawScoreWinner(score, ganador);
+  }
+
+  Widget _drawScoreLoser(List<dynamic> score, String player) {
+    String marcador = "";
+    for (var i = 0; i < score.length; i++) {
+      if (player == "1")
+        marcador = marcador + (i == 0 ? " " : ", ") + score[i]["jugador_uno"].toString();
+      else
+        marcador = marcador + (i == 0 ? " " : ", ") + score[i]["jugador_dos"].toString();
+    }
+    return Text(
+      marcador,
+      style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w500),
+    );
+  }
+
+  Widget _drawScoreWinner(List<dynamic> score, String player) {
+    String marcador = "";
+    for (var i = 0; i < score.length; i++) {
+      if (player == "1")
+        marcador = marcador + (i == 0 ? " " : ", ") + score[i]["jugador_uno"].toString();
+      else
+        marcador = marcador + (i == 0 ? " " : ", ") + score[i]["jugador_dos"].toString();
+    }
+    return Text(
+      marcador,
+      style: Theme.of(context).textTheme.bodyText1,
     );
   }
 
@@ -103,7 +181,9 @@ class _SchedulingCardState extends State<SchedulingCard> {
             softWrap: true,
             textAlign: TextAlign.center,
             maxLines: 2,
-            style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w300),
+            style: event.ganador == "2"
+                ? Theme.of(context).textTheme.bodyText1
+                : Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w300),
           ),
         ],
       ),
@@ -123,7 +203,9 @@ class _SchedulingCardState extends State<SchedulingCard> {
             softWrap: true,
             textAlign: TextAlign.center,
             maxLines: 2,
-            style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w300),
+            style: event.ganador == "1"
+                ? Theme.of(context).textTheme.bodyText1
+                : Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w300),
           ),
         ],
       ),
