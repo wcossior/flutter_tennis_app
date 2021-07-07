@@ -301,6 +301,37 @@ class _FullTimePageState extends State<FullTimePage> {
     return esCorrecto;
   }
 
+  bool _verificarMarcadorCorrecto3set(Map<String, int> marcadorSet) {
+    List<dynamic> marcadoresCorrectos = [
+      {"jugador_uno": 6, "jugador_dos": 0},
+      {"jugador_uno": 6, "jugador_dos": 1},
+      {"jugador_uno": 6, "jugador_dos": 2},
+      {"jugador_uno": 6, "jugador_dos": 3},
+      {"jugador_uno": 6, "jugador_dos": 4},
+      {"jugador_uno": 0, "jugador_dos": 6},
+      {"jugador_uno": 1, "jugador_dos": 6},
+      {"jugador_uno": 2, "jugador_dos": 6},
+      {"jugador_uno": 3, "jugador_dos": 6},
+      {"jugador_uno": 4, "jugador_dos": 6},
+    ];
+    bool esCorrecto = false;
+    for (var marcadorCorrecto in marcadoresCorrectos) {
+      if (marcadorCorrecto["jugador_uno"] == marcadorSet["jugador_uno"] &&
+          marcadorCorrecto["jugador_dos"] == marcadorSet["jugador_dos"]) {
+        esCorrecto = true;
+      }
+    }
+
+    if ((marcadorSet["jugador_uno"] > 6 &&
+            marcadorSet["jugador_dos"] < marcadorSet["jugador_uno"]) ||
+        (marcadorSet["jugador_dos"] > 6 &&
+            marcadorSet["jugador_uno"] < marcadorSet["jugador_dos"])) {
+      esCorrecto = true;
+    }
+
+    return esCorrecto;
+  }
+
   Widget _drawButtonSave(GameBloc bloc) {
     return CustomButton(
       child: Text(
@@ -342,7 +373,7 @@ class _FullTimePageState extends State<FullTimePage> {
               "jugador_uno": int.parse(set3player1Controller.text),
               "jugador_dos": int.parse(set3player2Controller.text),
             };
-            if (!_verificarMarcadorCorrecto(tercerSet)) {
+            if (!_verificarMarcadorCorrecto3set(tercerSet)) {
               setState(() {
                 errorMarcador3erSet = true;
               });
