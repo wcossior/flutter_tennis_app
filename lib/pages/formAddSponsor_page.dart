@@ -199,7 +199,7 @@ class _FormAddSponsorPageState extends State<FormAddSponsorPage> {
       color: ColorsApp.orange,
       disabledColor: ColorsApp.blueObscuredOp50,
       child: SvgIconsApp.addImg,
-      onPressed: _chooseFile,
+      onPressed: firstClick == false ? _chooseFile : null,
     );
   }
 

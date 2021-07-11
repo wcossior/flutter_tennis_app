@@ -18,6 +18,7 @@ class FullTimePage extends StatefulWidget {
 
 class _FullTimePageState extends State<FullTimePage> {
   GameBloc gameBloc = GameBloc();
+  bool firstclick = false;
 
   final _formKey = GlobalKey<FormState>();
   List<dynamic> marcador = [];
@@ -338,77 +339,85 @@ class _FullTimePageState extends State<FullTimePage> {
         'Guardar y finalizar',
         style: Theme.of(context).textTheme.button,
       ),
-      onPressed: () async {
-        if (_formKey.currentState.validate()) {
-          _formKey.currentState.save();
-          var primerSet = {
-            "jugador_uno": int.parse(set1player1Controller.text),
-            "jugador_dos": int.parse(set1player2Controller.text),
-          };
-          if (!_verificarMarcadorCorrecto(primerSet)) {
-            setState(() {
-              errorMarcador1erSet = true;
-            });
-          } else {
-            setState(() {
-              errorMarcador1erSet = false;
-            });
-          }
-          var segundoSet = {
-            "jugador_uno": int.parse(set2player1Controller.text),
-            "jugador_dos": int.parse(set2player2Controller.text),
-          };
-          if (!_verificarMarcadorCorrecto(segundoSet)) {
-            setState(() {
-              errorMarcador2doSet = true;
-            });
-          } else {
-            setState(() {
-              errorMarcador2doSet = false;
-            });
-          }
-          var tercerSet;
-          if (set3player1Controller.text != "" && set3player2Controller.text != "") {
-            tercerSet = {
-              "jugador_uno": int.parse(set3player1Controller.text),
-              "jugador_dos": int.parse(set3player2Controller.text),
-            };
-            if (!_verificarMarcadorCorrecto3set(tercerSet)) {
-              setState(() {
-                errorMarcador3erSet = true;
-              });
-            } else {
-              setState(() {
-                errorMarcador3erSet = false;
-              });
-            }
-          }
-          if (!errorMarcador1erSet && !errorMarcador2doSet) {
-            if (set3player1Controller.text != "" && set3player2Controller.text != "") {
-              if (!errorMarcador3erSet) {
-                marcador.add(primerSet);
-                marcador.add(segundoSet);
-                marcador.add(tercerSet);
-                KeyboardUtil.hideKeyboard(context);
-                await bloc.fullTime(widget.game.id, marcador);
-                String text = bloc.valueMessage;
-                var mssg = _showMessage(context, text);
-                await mssg.show();
-                Navigator.pop(context);
+      onPressed: firstclick == false
+          ? () async {
+              if (_formKey.currentState.validate()) {
+                _formKey.currentState.save();
+                var primerSet = {
+                  "jugador_uno": int.parse(set1player1Controller.text),
+                  "jugador_dos": int.parse(set1player2Controller.text),
+                };
+                if (!_verificarMarcadorCorrecto(primerSet)) {
+                  setState(() {
+                    errorMarcador1erSet = true;
+                  });
+                } else {
+                  setState(() {
+                    errorMarcador1erSet = false;
+                  });
+                }
+                var segundoSet = {
+                  "jugador_uno": int.parse(set2player1Controller.text),
+                  "jugador_dos": int.parse(set2player2Controller.text),
+                };
+                if (!_verificarMarcadorCorrecto(segundoSet)) {
+                  setState(() {
+                    errorMarcador2doSet = true;
+                  });
+                } else {
+                  setState(() {
+                    errorMarcador2doSet = false;
+                  });
+                }
+                var tercerSet;
+                if (set3player1Controller.text != "" && set3player2Controller.text != "") {
+                  tercerSet = {
+                    "jugador_uno": int.parse(set3player1Controller.text),
+                    "jugador_dos": int.parse(set3player2Controller.text),
+                  };
+                  if (!_verificarMarcadorCorrecto3set(tercerSet)) {
+                    setState(() {
+                      errorMarcador3erSet = true;
+                    });
+                  } else {
+                    setState(() {
+                      errorMarcador3erSet = false;
+                    });
+                  }
+                }
+                if (!errorMarcador1erSet && !errorMarcador2doSet) {
+                  if (set3player1Controller.text != "" && set3player2Controller.text != "") {
+                    if (!errorMarcador3erSet) {
+                      setState(() {
+                        firstclick = true;
+                      });
+                      marcador.add(primerSet);
+                      marcador.add(segundoSet);
+                      marcador.add(tercerSet);
+                      KeyboardUtil.hideKeyboard(context);
+                      await bloc.fullTime(widget.game.id, marcador);
+                      String text = bloc.valueMessage;
+                      var mssg = _showMessage(context, text);
+                      await mssg.show();
+                      Navigator.pop(context);
+                    }
+                  } else {
+                    setState(() {
+                      firstclick = true;
+                    });
+                    marcador.add(primerSet);
+                    marcador.add(segundoSet);
+                    KeyboardUtil.hideKeyboard(context);
+                    await bloc.fullTime(widget.game.id, marcador);
+                    String text = bloc.valueMessage;
+                    var mssg = _showMessage(context, text);
+                    await mssg.show();
+                    Navigator.pop(context);
+                  }
+                }
               }
-            } else {
-              marcador.add(primerSet);
-              marcador.add(segundoSet);
-              KeyboardUtil.hideKeyboard(context);
-              await bloc.fullTime(widget.game.id, marcador);
-              String text = bloc.valueMessage;
-              var mssg = _showMessage(context, text);
-              await mssg.show();
-              Navigator.pop(context);
             }
-          }
-        }
-      },
+          : null,
     );
   }
 
