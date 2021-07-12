@@ -9,7 +9,36 @@
       "client_info": {
         "mobilesdk_app_id": "1:440963675121:android:5e17d03da263c03fad8a50",
         "android_client_info": {
-          "package_name": "com.example.flutter_app_tenis"
+          "package_name": "com.wcossior.flutter_app_tenis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "440963675121-4na7l00vl0857h9vtrjkj186073uu1r0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6D6rd_8HjeFoKhp_SIhohrrqe4VUyv6U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "440963675121-4na7l00vl0857h9vtrjkj186073uu1r0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:440963675121:android:8e24f1362660fb65ad8a50",
+        "android_client_info": {
+          "package_name": "com.wcossior.flutter_app_tenis"
         }
       },
       "oauth_client": [
