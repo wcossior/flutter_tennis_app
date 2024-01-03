@@ -1,16 +1,16 @@
-# flutter_app_tenis
+# Tennis App
+Tennis App is a Flutter-based mobile application developed as a final project for the Systems Engineering degree. It serves as a comprehensive tournament management tool for tennis, integrating data from a custom API created by another student. The application provides valuable insights such as tournament details, match results, match schedules by categories, and enables user-friendly filtering options by dates and player names.
 
-A new Flutter project.
+## Key Features
+- **Tournament Information**: Access detailed information about various tennis tournaments.
+- **Match Results**: View match results for a complete overview of the tournament.
+- **Match Schedule by Categories**: Organize match schedules based on different categories.
+- **Filtering Capabilities**: Effortlessly filter data by dates and player names for a personalized experience.
+- **Referee Account**: Register and log in as a referee to input match results.
+- **Player Account**: Create a player account to participate in tournaments and track personal progress and match schedule.
+- **Admin Privileges**: Admin users have the ability to manage all aspects, including sponsor carousels.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Usage
+1. Clone the repository to your local machine:
+   ```bash
+   git clone https://github.com/wcossior/flutter_tennis_app
